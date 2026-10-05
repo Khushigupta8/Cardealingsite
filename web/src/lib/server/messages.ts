@@ -53,8 +53,14 @@ export async function addMessage(vehicle: VehicleRow, user: AuthUser, body: stri
       sendEmail({
         to: await emailsFor({ role: 'dealer', dealershipId: vehicle.dealership_id }),
         subject: `A note from your reviewer: ${name(vehicle)}`,
-        heading: `Your reviewer wrote about the ${name(vehicle)}`,
-        lines: [`“${body}”`],
+        preheader: body,
+        eyebrow: 'New message',
+        title: ['A note from', 'your reviewer.'],
+        blocks: [
+          { kind: 'text', text: `About the ${name(vehicle)} (VIN ${vehicle.vin}):` },
+          { kind: 'quote', from: 'Your reviewer', text: body },
+          { kind: 'text', text: 'Reply from the vehicle in your workspace. The conversation stays with the car.' },
+        ],
         cta: { label: 'Open your workspace', path: '/portal' },
       }),
     );
@@ -66,8 +72,13 @@ export async function addMessage(vehicle: VehicleRow, user: AuthUser, body: stri
       await sendEmail({
         to: team,
         subject: `New message from ${dealership}: ${name(vehicle)}`,
-        heading: `${dealership} wrote about the ${name(vehicle)}`,
-        lines: [`“${body}”`],
+        preheader: body,
+        eyebrow: 'New message',
+        title: ['The dealer', 'replied.'],
+        blocks: [
+          { kind: 'text', text: `${dealership} wrote about the ${name(vehicle)} (VIN ${vehicle.vin}):` },
+          { kind: 'quote', from: dealership, text: body },
+        ],
         cta: { label: 'Open the review queue', path: '/admin' },
       });
     });

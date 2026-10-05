@@ -7,6 +7,8 @@ import { VEHICLE_COLUMNS, asRow, getReview, loadVehicle, toVehicle } from '@/lib
 import { emailsFor, sendEmail } from '@/lib/server/email';
 
 // Reviewer grades the vehicle; this completes it.
+const GRADE_WORDS: Record<number, string> = { 5: 'Excellent', 4: 'Good', 3: 'Fair', 2: 'Rough', 1: 'Poor' };
+
 export const POST = route<{ id: string }>(async (req, { id }) => {
   const user = await requireUser(req, 'reviewer', 'admin');
   const vehicle = await loadVehicle(id, user);
@@ -49,11 +51,20 @@ export const POST = route<{ id: string }>(async (req, { id }) => {
     sendEmail({
       to: await emailsFor({ role: 'dealer', dealershipId: vehicle.dealership_id }),
       subject: `Your review is ready: ${name}`,
-      heading: `The ${name} has been reviewed`,
-      lines: [
-        `Condition grade: ${body.conditionGrade} / 5`,
-        `Recommended listing price: $${body.recommendedPrice.toLocaleString('en-US')}`,
-        'Open the vehicle in your workspace to read the reviewer’s notes and download the branded PDF report.',
+      preheader: `Grade ${body.conditionGrade}/5 · recommended $${body.recommendedPrice.toLocaleString('en-US')}`,
+      eyebrow: 'Review complete',
+      title: ['Your review', 'is ready.'],
+      blocks: [
+        { kind: 'text', text: `Our team has finished reviewing the ${name}${vehicle.trim ? ` ${vehicle.trim}` : ''} (VIN ${vehicle.vin}).` },
+        {
+          kind: 'stats',
+          items: [
+            { label: 'Condition grade', value: `${body.conditionGrade}/5`, sub: GRADE_WORDS[body.conditionGrade] },
+            { label: 'Recommended listing', value: `$${body.recommendedPrice.toLocaleString('en-US')}` },
+          ],
+        },
+        ...(body.notes ? [{ kind: 'quote' as const, from: 'Reviewer notes', text: body.notes }] : []),
+        { kind: 'text', text: 'Open the vehicle in your workspace to download the branded PDF report.' },
       ],
       cta: { label: 'View the review', path: '/portal' },
     }),

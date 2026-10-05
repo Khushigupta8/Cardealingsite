@@ -41,12 +41,23 @@ export const POST = route(async req => {
     sendEmail({
       to: await emailsFor({ role: 'admin' }),
       subject: `New enquiry: ${e.dealership}`,
-      heading: 'A dealership asked for an invitation',
-      lines: [
-        `${e.name} from ${e.dealership}${e.location ? ` (${e.location})` : ''}`,
-        `${e.email}${e.phone ? ` · ${e.phone}` : ''}`,
-        ...(e.monthlyVolume ? [`Vehicles per month: ${e.monthlyVolume}`] : []),
-        ...(e.message ? [`“${e.message}”`] : []),
+      preheader: `${e.name} from ${e.dealership} asked for an invitation`,
+      eyebrow: 'New enquiry',
+      title: ['Invitation', 'requested.'],
+      blocks: [
+        { kind: 'text', text: 'A dealership asked for an invitation from the website.' },
+        {
+          kind: 'details',
+          rows: [
+            ['Dealership', e.dealership],
+            ['Contact', e.name],
+            ['Email', e.email],
+            ...(e.phone ? ([['Phone', e.phone]] as [string, string][]) : []),
+            ...(e.location ? ([['Location', e.location]] as [string, string][]) : []),
+            ...(e.monthlyVolume ? ([['Vehicles per month', e.monthlyVolume]] as [string, string][]) : []),
+          ],
+        },
+        ...(e.message ? [{ kind: 'quote' as const, from: 'Their message', text: e.message }] : []),
       ],
       cta: { label: 'Open enquiries', path: '/admin#enquiries' },
     }),

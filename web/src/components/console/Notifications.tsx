@@ -52,8 +52,12 @@ export function NotificationBell({ onOpen, from }: { onOpen: (vehicleId: string)
         if (fresh.length === 1) toast(`New message${from === 'dealer' ? ` from ${fresh[0].dealershipName ?? 'a dealership'}` : ' from your reviewer'} about the ${fresh[0].vehicleName}`);
         else if (fresh.length > 1) toast(`${fresh.length} conversations have new messages`);
       }
+      const arrived = !!seen.current && next.items.some(u => (seen.current!.get(u.vehicleId) ?? '') < u.lastAt);
       seen.current = new Map(next.items.map(u => [u.vehicleId, u.lastAt]));
       setData(next);
+      // New messages also change the "new" badges in the vehicle lists. (The bell's own reload
+      // that this triggers finds nothing newer, so it doesn't loop.)
+      if (arrived) unreadChanged();
     } catch {
       // A failed check just waits for the next one; signing out is handled by the page's own requests.
     }

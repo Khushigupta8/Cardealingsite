@@ -28,8 +28,14 @@ export const POST = route<{ id: string }>(async (req, { id }) => {
     sendEmail({
       to: await emailsFor({ role: 'dealer', dealershipId: vehicle.dealership_id }),
       subject: `More information needed: ${name}`,
-      heading: `Your reviewer needs a little more on the ${name}`,
-      lines: [`“${message}”`, 'Add what they asked for, then resubmit the vehicle from your workspace.'],
+      preheader: message,
+      eyebrow: 'Needs info',
+      title: ['One more detail.', 'A better assessment.'],
+      blocks: [
+        { kind: 'text', text: `Your reviewer needs a little more on the ${name} (VIN ${vehicle.vin}).` },
+        { kind: 'quote', from: 'Your reviewer', text: message },
+        { kind: 'text', text: 'Add what they asked for, then resubmit the vehicle from your workspace. It goes straight back into the review queue.' },
+      ],
       cta: { label: 'Respond in your workspace', path: '/portal' },
     }),
   );
