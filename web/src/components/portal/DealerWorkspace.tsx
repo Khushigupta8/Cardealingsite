@@ -225,9 +225,15 @@ function Workspace({ me, onSignOut, expire }: { me: Me; onSignOut: () => void; e
               ) : none ? (
                 <>
                   <strong>Submit your first vehicle</strong>
-                  Add the VIN, mileage, notes and photos. Our team returns a condition grade and a recommended listing price.
-                  <br /><br />
-                  <button className="btn btn-primary" data-new onClick={() => setSubmitting(true)}><Icon name="plus" />Submit a vehicle</button>
+                  {canSubmit
+                    ? 'Add the VIN, mileage, notes and photos. Our team returns a condition grade and a recommended listing price.'
+                    : 'Once your membership is active you can add the VIN, mileage, notes and photos here.'}
+                  {canSubmit && (
+                    <>
+                      <br /><br />
+                      <button className="btn btn-primary" data-new onClick={() => setSubmitting(true)}><Icon name="plus" />Submit a vehicle</button>
+                    </>
+                  )}
                 </>
               ) : (
                 <><strong>{EMPTY[status][0]}</strong>{EMPTY[status][1]}</>

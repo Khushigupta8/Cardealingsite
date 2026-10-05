@@ -2,13 +2,25 @@ import 'server-only';
 import { admin } from './supabase';
 
 // Site-wide switches stored in app_settings (migration 004). Defaults apply until it exists.
-export type Settings = { membershipRequired: boolean; graceDays: number; stripeProductId?: string; stripePortalConfigId?: string };
+export type Settings = {
+  membershipRequired: boolean;
+  graceDays: number;
+  stripeProductId?: string;
+  stripePortalConfigId?: string;
+  // Standard plan: what any dealership without its own agreed price pays.
+  standardPlanCents?: number;
+  standardPlanInterval?: 'month' | 'year';
+  standardPriceId?: string;
+};
 
 const KEYS: Record<keyof Settings, string> = {
   membershipRequired: 'membership_required',
   graceDays: 'grace_days',
   stripeProductId: 'stripe_product_id',
   stripePortalConfigId: 'stripe_portal_config_id',
+  standardPlanCents: 'standard_plan_cents',
+  standardPlanInterval: 'standard_plan_interval',
+  standardPriceId: 'standard_price_id',
 };
 
 export async function getSettings(): Promise<Settings> {
@@ -19,6 +31,9 @@ export async function getSettings(): Promise<Settings> {
     graceDays: Number(map.get(KEYS.graceDays) ?? 7),
     stripeProductId: (map.get(KEYS.stripeProductId) as string) || undefined,
     stripePortalConfigId: (map.get(KEYS.stripePortalConfigId) as string) || undefined,
+    standardPlanCents: Number(map.get(KEYS.standardPlanCents)) || undefined,
+    standardPlanInterval: (map.get(KEYS.standardPlanInterval) as 'month' | 'year') || undefined,
+    standardPriceId: (map.get(KEYS.standardPriceId) as string) || undefined,
   };
 }
 

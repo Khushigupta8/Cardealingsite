@@ -1,10 +1,12 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
-import { api, type AdminSettings, type DealershipMembership } from '@/lib/client/api';
+import { api, type AdminSettings, type DealershipMembership, type Plan } from '@/lib/client/api';
 import { Icon } from '@/components/console/icons';
 import { SkeletonRows, useApiErrors, useToast } from '@/components/console/kit';
 import { date } from '@/components/console/format';
+
+const planText = (p: Plan) => `$${(p.amountCents / 100).toLocaleString('en-US')} / ${p.interval === 'month' ? 'month' : 'year'}`;
 
 function StatusPill({ d, required }: { d: DealershipMembership; required: boolean }) {
   if (d.exempt) return <span className="pill ok"><Icon name="check" />Complimentary</span>;
@@ -61,6 +63,7 @@ export function MembershipPanel({ expire }: { expire: () => void }) {
   const [drafts, setDrafts] = useState<Record<string, { amount: string; interval: 'month' | 'year' }>>({});
   const [busy, setBusy] = useState<Record<string, boolean>>({});
   const [armed, setArmed] = useState(false);
+  const [standard, setStandard] = useState<{ amount: string; interval: 'month' | 'year' }>({ amount: '', interval: 'month' });
 
   const fail = useCallback(
     (err: unknown) => {
@@ -75,7 +78,9 @@ export function MembershipPanel({ expire }: { expire: () => void }) {
       const [s, r] = await Promise.all([api.get<AdminSettings>('/admin/settings'), api.get<DealershipMembership[]>('/admin/membership')]);
       setSettings(s);
       setRows(r);
-      setDrafts(Object.fromEntries(r.map(d => [d.id, { amount: d.plan ? String(d.plan.amountCents / 100) : '', interval: d.plan?.interval ?? 'month' }])));
+      setStandard({ amount: s.standardPlan ? String(s.standardPlan.amountCents / 100) : '', interval: s.standardPlan?.interval ?? 'month' });
+      // Only a dealership's own price goes in its row; the standard plan shows as the placeholder.
+      setDrafts(Object.fromEntries(r.map(d => [d.id, { amount: d.planSource === 'custom' && d.plan ? String(d.plan.amountCents / 100) : '', interval: d.planSource === 'custom' ? d.plan!.interval : 'month' }])));
     } catch (err) {
       fail(err);
       setRows(r => r ?? []);
@@ -91,7 +96,7 @@ export function MembershipPanel({ expire }: { expire: () => void }) {
     return () => clearTimeout(t);
   }, [armed]);
 
-  const saveSettings = async (patch: Partial<AdminSettings>) => {
+  const saveSettings = async (patch: Partial<Omit<AdminSettings, 'standardPlan'>> & { standardPlan?: { amount: number; interval: 'month' | 'year' } }) => {
     try {
       setSettings(await api.patch<AdminSettings>('/admin/settings', patch));
       toast('Settings saved');
@@ -131,8 +136,17 @@ export function MembershipPanel({ expire }: { expire: () => void }) {
 
   const unchanged = (d: DealershipMembership) => {
     const draft = drafts[d.id];
-    return !!d.plan && Number(draft?.amount) * 100 === d.plan.amountCents && draft?.interval === d.plan.interval;
+    return d.planSource === 'custom' && !!d.plan && Number(draft?.amount) * 100 === d.plan.amountCents && draft?.interval === d.plan.interval;
   };
+
+  const saveStandard = (e: React.FormEvent) => {
+    e.preventDefault();
+    const amount = Number(standard.amount);
+    if (!(amount > 0)) return toast('Enter the standard plan amount in dollars', 'error');
+    saveSettings({ standardPlan: { amount, interval: standard.interval } });
+  };
+  const standardUnchanged =
+    !!settings?.standardPlan && Number(standard.amount) * 100 === settings.standardPlan.amountCents && standard.interval === settings.standardPlan.interval;
 
   return (
     <section data-panel="membership" aria-labelledby="membership-title">
@@ -178,6 +192,38 @@ export function MembershipPanel({ expire }: { expire: () => void }) {
             </span>
           </label>
         </div>
+        <form className="standard-plan" id="standard-plan" onSubmit={saveStandard}>
+          <div>
+            <strong>Standard plan</strong>
+            <p className="hint">
+              {settings?.standardPlan
+                ? `Dealerships without their own price can activate at ${planText(settings.standardPlan)}. Changes apply to new sign-ups; current members keep their price.`
+                : 'Set a price every new dealership can activate with straight away. You can still give any dealership its own price below.'}
+            </p>
+          </div>
+          <span className="plan-edit">
+            <span className="money">
+              <input
+                name="standardAmount"
+                type="number"
+                inputMode="decimal"
+                min={1}
+                step="0.01"
+                placeholder="Amount"
+                aria-label="Standard plan amount"
+                value={standard.amount}
+                onChange={e => setStandard(x => ({ ...x, amount: e.target.value }))}
+              />
+            </span>
+            <select name="standardInterval" aria-label="Standard plan billing frequency" value={standard.interval} onChange={e => setStandard(x => ({ ...x, interval: e.target.value as 'month' | 'year' }))}>
+              <option value="month">Monthly</option>
+              <option value="year">Yearly</option>
+            </select>
+            <button className="btn btn-sm btn-primary" type="submit" disabled={!settings?.stripeConfigured || standardUnchanged}>
+              {settings?.standardPlan ? 'Update' : 'Save'}
+            </button>
+          </span>
+        </form>
         {settings && (!settings.stripeConfigured || !settings.webhookConfigured) && (
           <div className="notice">
             <Icon name="alert" />
@@ -217,7 +263,7 @@ export function MembershipPanel({ expire }: { expire: () => void }) {
                           inputMode="decimal"
                           min={1}
                           step="0.01"
-                          placeholder="Amount"
+                          placeholder={settings?.standardPlan ? String(settings.standardPlan.amountCents / 100) : 'Amount'}
                           aria-label={`Amount for ${d.name}`}
                           value={drafts[d.id]?.amount ?? ''}
                           onChange={e => setDrafts(x => ({ ...x, [d.id]: { ...x[d.id], amount: e.target.value } }))}
@@ -233,9 +279,15 @@ export function MembershipPanel({ expire }: { expire: () => void }) {
                         <option value="year">Yearly</option>
                       </select>
                       <button className="btn btn-sm" type="submit" disabled={busy[d.id] || unchanged(d) || !settings?.stripeConfigured}>
-                        {busy[d.id] ? 'Saving…' : d.plan ? 'Update' : 'Set plan'}
+                        {busy[d.id] ? 'Saving…' : d.planSource === 'custom' ? 'Update' : 'Set price'}
                       </button>
                     </form>
+                    {d.planSource === 'standard' && d.plan && <div className="sub plan-source">Standard plan · {planText(d.plan)}</div>}
+                    {d.planSource === 'custom' && settings?.standardPlan && (
+                      <button type="button" className="link-btn plan-source" data-use-standard={d.id} disabled={busy[d.id]} onClick={() => patch(d, { useStandardPlan: true }, `${d.name} is on the standard plan`)}>
+                        Use standard plan ({planText(settings.standardPlan)})
+                      </button>
+                    )}
                   </td>
                   <td data-label="Status"><StatusPill d={d} required={!!settings?.membershipRequired} /></td>
                   <td data-label="Renews">{d.currentPeriodEnd && !d.exempt ? date(d.currentPeriodEnd) : '-'}</td>

@@ -33,6 +33,13 @@ export type DealershipBilling = {
 
 export type MembershipState = ReturnType<typeof membershipState>;
 
+export const standardPlan = (s: Settings) =>
+  s.standardPlanCents && s.standardPlanInterval && s.standardPriceId ? { amountCents: s.standardPlanCents, interval: s.standardPlanInterval } : null;
+
+// The Stripe price a dealership checks out with: its own, or the standard plan's.
+export const priceIdFor = (d: DealershipBilling, s: Settings) =>
+  d.plan_amount_cents && d.plan_interval ? d.stripe_price_id : standardPlan(s) ? s.standardPriceId! : null;
+
 // Can this dealership submit and update vehicles right now?
 export function membershipState(d: DealershipBilling, s: Settings, now = Date.now()) {
   const status = d.subscription_status;
@@ -41,6 +48,7 @@ export function membershipState(d: DealershipBilling, s: Settings, now = Date.no
   const subscribed = status === 'active' || status === 'trialing';
   const inGrace = !!graceEndsAt && now < new Date(graceEndsAt).getTime();
   const exempt = !!d.billing_exempt;
+  const customPlan = d.plan_amount_cents && d.plan_interval ? { amountCents: d.plan_amount_cents, interval: d.plan_interval } : null;
   const active = !s.membershipRequired || exempt || subscribed || inGrace;
   return {
     required: s.membershipRequired,
@@ -51,7 +59,9 @@ export function membershipState(d: DealershipBilling, s: Settings, now = Date.no
     graceEndsAt,
     currentPeriodEnd: d.current_period_end,
     cancelAtPeriodEnd: !!d.cancel_at_period_end,
-    plan: d.plan_amount_cents && d.plan_interval ? { amountCents: d.plan_amount_cents, interval: d.plan_interval } : null,
+    // The dealership's own agreed price, otherwise the standard plan (if one is set).
+    plan: customPlan ?? standardPlan(s),
+    planSource: customPlan ? ('custom' as const) : standardPlan(s) ? ('standard' as const) : null,
     // Only a live subscription can be managed in the portal; otherwise the dealer checks out again.
     hasSubscription: !!d.stripe_subscription_id && ['active', 'trialing', 'past_due', 'unpaid'].includes(status ?? ''),
     hasCustomer: !!d.stripe_customer_id,

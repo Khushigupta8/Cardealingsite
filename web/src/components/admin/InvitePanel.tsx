@@ -55,13 +55,19 @@ export function InvitePanel({ expire, prefill, onUsedPrefill }: { expire: () => 
     }
     setBusy(true);
     try {
-      await api.post('/admin/invitations', body);
+      const res = await api.post<{ emailSent: boolean; emailProblem?: string }>('/admin/invitations', body);
       if (prefill && body.email.toLowerCase() === prefill.email.toLowerCase()) {
         await api.patch(`/admin/enquiries/${encodeURIComponent(prefill.enquiryId)}`, { status: 'invited' }).catch(() => {});
         onUsedPrefill?.();
       }
-      setOk(`Invitation sent to ${body.email}. They’ll appear under People as Invited.`);
-      toast(`Invitation sent to ${body.email}`);
+      if (res.emailSent) {
+        setOk(`Invitation sent to ${body.email}. They’ll appear under People as Invited.`);
+        toast(`Invitation sent to ${body.email}`);
+      } else {
+        // Added, but Supabase couldn't email them: the admin shares the link instead.
+        setError(`${body.email} was added under People, but no email went out. ${res.emailProblem ?? ''}`);
+        toast(`${body.email} added. Email not sent`, 'error');
+      }
       setEmail('');
       setDealershipName('');
       load();

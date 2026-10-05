@@ -87,12 +87,14 @@ export interface Membership {
   currentPeriodEnd: string | null;
   cancelAtPeriodEnd: boolean;
   plan: { amountCents: number; interval: 'month' | 'year' } | null;
+  planSource: 'custom' | 'standard' | null; // the dealership's own price, or the standard plan
   hasSubscription: boolean;
   hasCustomer: boolean;
   billingAvailable?: boolean;
 }
 export interface DealershipMembership extends Membership { id: string; name: string }
-export interface AdminSettings { membershipRequired: boolean; graceDays: number; stripeConfigured: boolean; webhookConfigured: boolean }
+export type Plan = { amountCents: number; interval: 'month' | 'year' };
+export interface AdminSettings { membershipRequired: boolean; graceDays: number; standardPlan: Plan | null; stripeConfigured: boolean; webhookConfigured: boolean }
 
 export interface VinResult { vin: string; year: number; make: string; model: string | null; trim: string | null; warning: string | null }
 

@@ -6,7 +6,8 @@ import { requireUser } from '@/lib/server/auth';
 import { getSettings } from '@/lib/server/settings';
 import { membershipState, priceFor, stripe, type DealershipBilling } from '@/lib/server/membership';
 
-// Rename a dealership, set its agreed plan (amount + monthly/yearly) and complimentary status.
+// Rename a dealership, set its agreed plan (amount + monthly/yearly) or put it back on the
+// standard plan, and set complimentary status.
 export const PATCH = route<{ id: string }>(async (req, { id }) => {
   await requireUser(req, 'admin');
   uuid(id, 'Dealership not found');
@@ -16,6 +17,8 @@ export const PATCH = route<{ id: string }>(async (req, { id }) => {
       planInterval: z.enum(['month', 'year']).optional(),
       billingExempt: z.boolean().optional(),
       name: z.string().trim().min(1, 'Enter the dealership name').max(160).optional(),
+      // Drop the custom price and fall back to the standard plan (for new checkouts).
+      useStandardPlan: z.literal(true).optional(),
     })
     .parse(await readJson(req));
   const db = admin();
@@ -30,7 +33,8 @@ export const PATCH = route<{ id: string }>(async (req, { id }) => {
     if (d.stripe_customer_id) await stripe().customers.update(d.stripe_customer_id, { name: body.name }).catch(() => {});
   }
 
-  if (body.planAmount !== undefined || body.planInterval !== undefined) {
+  if (body.useStandardPlan) Object.assign(changes, { plan_amount_cents: null, plan_interval: null, stripe_price_id: null });
+  else if (body.planAmount !== undefined || body.planInterval !== undefined) {
     const amountCents = Math.round((body.planAmount ?? (d.plan_amount_cents ?? 0) / 100) * 100);
     const interval = body.planInterval ?? d.plan_interval;
     if (!amountCents || !interval) throw badRequest('Set both the amount and how often it’s billed');

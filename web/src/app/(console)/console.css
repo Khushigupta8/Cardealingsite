@@ -435,3 +435,9 @@ a.btn { text-decoration: none; justify-content: center; }
 @media (max-width: 560px) {
   .bell-menu, .sidebar .bell-menu { position: fixed; top: 64px; left: 12px; right: 12px; width: auto; }
 }
+
+/* Standard plan row in Admin -> Membership */
+.standard-plan { display: flex; justify-content: space-between; align-items: center; gap: 16px 24px; flex-wrap: wrap; padding-top: 18px; margin-top: 18px; border-top: 1px solid var(--line); }
+.standard-plan .hint { margin: 4px 0 0; max-width: 560px; }
+.plan-source { margin-top: 6px; font-size: 12px; }
+button.plan-source { padding: 0; }

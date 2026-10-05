@@ -1,6 +1,7 @@
 import { env } from '@/lib/server/env';
 import { admin, authClient } from '@/lib/server/supabase';
-import { HttpError, json, route } from '@/lib/server/http';
+import { json, route } from '@/lib/server/http';
+import { emailFailure } from '@/lib/server/auth-email';
 import { requireUser } from '@/lib/server/auth';
 import { findUser } from '@/lib/server/users';
 
@@ -21,9 +22,6 @@ export const POST = route<{ id: string }>(async (req, { id }) => {
       redirectTo: `${env().APP_URL}/${kind === 'reset' ? 'reset-password' : 'activate'}`,
     });
   }
-  if (sent.error) {
-    if (sent.error.status === 429) throw new HttpError(429, 'Too many emails sent recently. Use "Copy link" instead, or try again in an hour.', 'rate_limited');
-    throw new Error(`Could not send link: ${sent.error.message}`);
-  }
+  if (sent.error) throw emailFailure(sent.error) ?? new Error(`Could not send link: ${sent.error.message}`);
   return json({ email, kind });
 });
