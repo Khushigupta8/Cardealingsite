@@ -1,0 +1,10 @@
+.env*
+!.env.example
+.next
+node_modules
+.vercel
+tests
+playwright.config.ts
+scripts
+test-results
+playwright-report

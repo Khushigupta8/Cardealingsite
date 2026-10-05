@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.env
+*.log
+.vercel
+
+# Internal notes, kept locally
+/scope.md
