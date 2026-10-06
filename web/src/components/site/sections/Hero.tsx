@@ -1,6 +1,6 @@
 // Generated from the original static homepage; edit freely.
 import Image from 'next/image';
-import heroCar from '@/assets/images/hero-car.png';
+import heroCar from '@/assets/images/hero-car-911.png';
 import { HeroMotion } from '../HeroMotion';
 
 export function Hero() {
@@ -12,7 +12,7 @@ export function Hero() {
         <div className="hero-car">
           <Image
             src={heroCar}
-            alt="Overhead view of a black Porsche 911 GT3 R"
+            alt="Overhead view of a white Porsche 911 GT3 RS"
             sizes="(max-width: 860px) 100vw, 1020px"
             fetchPriority="high"
             loading="eager"
