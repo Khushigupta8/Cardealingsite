@@ -32,11 +32,26 @@ The first admin is created from Supabase: add a user under **Authentication → 
 Linked to the Vercel project `devon-dealer-review-video-v5-1`. Functions run in `hnd1` (Tokyo),
 next to the Supabase database (`vercel.json`). Set `SUPABASE_URL`, `SUPABASE_ANON_KEY`,
 `SUPABASE_SERVICE_ROLE_KEY`, `PHOTO_BUCKET`, `STRIPE_SECRET_KEY` and `STRIPE_WEBHOOK_SECRET` in Vercel
-(plus `RESEND_API_KEY` and `EMAIL_FROM` for app emails); `APP_URL` defaults to the production URL.
+(plus `RESEND_API_KEY` and `EMAIL_FROM` for email); `APP_URL` defaults to the production URL.
 
 ```bash
 npx vercel deploy --prod
 ```
+
+## Email templates
+
+All emails share one branded layout (`src/lib/server/email-layout.ts`) and go out through
+Resend, invitations and password resets included: the app asks Supabase for the one-time link
+(`generateLink`, which sends nothing) and emails it itself (`src/lib/server/auth-links.ts`).
+
+Supabase only sends email for flows the app doesn't use (sign-up confirmation, magic link,
+email change, reauthentication). Templates for those are generated with `npm run email-templates`;
+paste each file in `supabase/email-templates/` into Supabase → Authentication → Emails.
+
+**Test mode.** Before a domain is verified in Resend, the test sender `onboarding@resend.dev`
+only delivers to the Resend account owner. Set `EMAIL_TEST_INBOX` to that address and every
+email goes there, with the intended recipients in the subject line. Remove it after setting
+`EMAIL_FROM` to an address on the verified domain.
 
 ## Notes
 
@@ -45,6 +60,5 @@ npx vercel deploy --prod
   Vercel's ~4.5 MB request limit.
 - Sign-in attempts are rate limited per IP in Postgres (`rate_limit_hit`), since serverless
   functions share no memory. Without the migration the check is skipped and a warning is logged.
-- Supabase's built-in email sender allows only a few emails per hour; connect custom SMTP
-  (e.g. Resend) under **Authentication → Emails** before inviting real dealers. Until then,
-  **People → Copy link** gives an admin a one-time sign-in link without email.
+- If an email can't be sent, **People → Copy link** gives an admin a one-time sign-in link
+  to share another way.

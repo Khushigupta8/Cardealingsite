@@ -1,10 +1,9 @@
 import { z } from 'zod';
-import { env } from '@/lib/server/env';
 import { admin } from '@/lib/server/supabase';
 import { badRequest, conflict, json, maybe, must, notFound, readJson, route } from '@/lib/server/http';
 import { requireUser } from '@/lib/server/auth';
 import { userIdByEmail } from '@/lib/server/users';
-import { emailFailure } from '@/lib/server/auth-email';
+import { createAuthLink, emailAuthLink } from '@/lib/server/auth-links';
 
 const invitation = z.object({
   email: z.email(),
@@ -39,23 +38,14 @@ export const POST = route(async req => {
   }
   const createdDealership = dealershipId && !body.dealershipId ? dealershipId : null;
 
-  const invited = await db.auth.admin.inviteUserByEmail(body.email, { redirectTo: `${env().APP_URL}/activate` });
-  let user = invited.data.user;
-  // The account is fine but the email couldn't go out: still add the person, so the admin can
-  // share their link with "Copy link", and say plainly that nothing was emailed.
-  const mailProblem = invited.error ? emailFailure(invited.error) : null;
-  if (mailProblem) {
-    const id = await userIdByEmail(body.email);
-    user = id
-      ? (await db.auth.admin.getUserById(id)).data.user
-      : (await db.auth.admin.createUser({ email: body.email, email_confirm: true })).data.user;
-  }
-  if (!user || (invited.error && !mailProblem)) {
+  // Creates the account and its activation link; the email is sent once the profile exists.
+  const invited = await createAuthLink('invite', body.email);
+  if (invited.error || !invited.data.user) {
     if (createdDealership) await db.from('dealerships').delete().eq('id', createdDealership);
     if (invited.error?.status === 422) throw conflict('An account with this email already exists');
     throw new Error(`Invitation failed: ${invited.error?.message ?? 'no account was created'}`);
   }
-  const data = { user };
+  const data = { user: invited.data.user };
 
   // Supabase re-sends the invite for an address that was already invited (and returns that
   // existing user). Never touch an account this request didn't create.
@@ -73,8 +63,12 @@ export const POST = route(async req => {
     throw new Error(`Invitation failed: ${created.error.message}`);
   }
 
+  // The account is fine even if the email can't go out: the admin can share the link with
+  // "Copy link", and the response says plainly that nothing was emailed.
+  const sent = await emailAuthLink('invite', body.email, invited.data.properties.action_link);
+  const emailProblem = sent.ok ? null : `${sent.reason} Use “Copy link” under People to share their link directly.`;
   return json(
-    { userId: data.user.id, email: body.email, role: body.role, dealershipId, emailSent: !mailProblem, ...(mailProblem ? { emailProblem: mailProblem.message } : {}) },
+    { userId: data.user.id, email: body.email, role: body.role, dealershipId, emailSent: sent.ok, ...(emailProblem ? { emailProblem } : {}) },
     201,
   );
 });

@@ -2,13 +2,14 @@
 // with an eyebrow and a two-line uppercase headline, a dark content panel, a square red
 // button and a quiet footer. Table-based with inline styles so it holds up in Gmail, Outlook
 // and Apple Mail. Also used to generate the Supabase templates in supabase/email-templates
-// (node src/lib/server/email-layout.ts), so keep this file free of imports.
+// (npm run email-templates), so keep this file free of imports.
 
 export type EmailBlock =
   | { kind: 'text'; text: string }
   | { kind: 'quote'; text: string; from?: string }
   | { kind: 'stats'; items: { label: string; value: string; sub?: string }[] }
-  | { kind: 'details'; rows: [label: string, value: string][] };
+  | { kind: 'details'; rows: [label: string, value: string][] }
+  | { kind: 'code'; label: string; code: string }; // a one-time code, shown large
 
 export type EmailContent = {
   eyebrow: string; // small spaced label above the headline, e.g. "Review complete"
@@ -33,10 +34,20 @@ const C = {
 };
 const DISPLAY = "Orbitron,'Arial Black',Arial,Helvetica,sans-serif";
 const SANS = 'Arial,Helvetica,sans-serif';
+// Hosted in a public Supabase Storage bucket (email-assets) so mail clients can load it from
+// anywhere, including emails sent from a local dev server. Copy of public/email-logo.png.
+const LOGO_URL = 'https://caxwdfdhrhmvcxstqyik.supabase.co/storage/v1/object/public/email-assets/email-logo.png';
 
 export const esc = (s: string) => s.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!);
 
 function block(b: EmailBlock) {
+  if (b.kind === 'code') {
+    return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:4px 0 20px"><tr>
+      <td align="center" style="background:${C.panel};border:1px solid ${C.line};border-top:3px solid ${C.red};padding:20px 18px">
+        <p style="margin:0 0 10px;font:700 10px/1.4 ${SANS};letter-spacing:2px;text-transform:uppercase;color:${C.muted}">${esc(b.label)}</p>
+        <p style="margin:0;font:900 34px/1.1 ${DISPLAY};letter-spacing:8px;color:${C.ink}">${esc(b.code)}</p>
+      </td></tr></table>`;
+  }
   if (b.kind === 'text') return `<p style="margin:0 0 16px;font:15px/1.7 ${SANS};color:${C.body}">${esc(b.text)}</p>`;
   if (b.kind === 'quote') {
     return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:4px 0 20px"><tr>
@@ -70,7 +81,7 @@ function block(b: EmailBlock) {
   return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 20px;border-top:1px solid ${C.line};border-bottom:1px solid ${C.line}">${rows}</table>`;
 }
 
-// `siteUrl` is where the logo and links point (APP_URL, or "{{ .SiteURL }}" in Supabase templates).
+// `siteUrl` is where links point (APP_URL, or "{{ .SiteURL }}" in Supabase templates).
 export function renderEmail(content: EmailContent, siteUrl: string) {
   const [line1, line2] = content.title;
   const button = content.cta
@@ -99,7 +110,7 @@ ${content.preheader ? `<div style="display:none;max-height:0;overflow:hidden;mso
   <tr><td align="center" style="padding:28px 12px">
     <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="width:100%;max-width:600px;background:${C.card}">
       <tr><td class="px" bgcolor="#111111" style="background:#111111;padding:20px 36px;border-bottom:3px solid ${C.red}">
-        <a href="${esc(siteUrl)}" style="text-decoration:none"><img src="${esc(siteUrl)}/email-logo.png" width="150" height="55" alt="DEALER REVIEW." style="display:block;border:0;font:900 16px ${DISPLAY};color:#ffffff"></a>
+        <a href="${esc(siteUrl)}" style="text-decoration:none"><img src="${LOGO_URL}" width="150" height="55" alt="DEALER REVIEW." style="display:block;border:0;font:900 16px ${DISPLAY};color:#ffffff"></a>
       </td></tr>
       <tr><td class="px" bgcolor="${C.darkRed}" style="background:${C.darkRed};background-image:linear-gradient(135deg,${C.darkRed} 0%,#c8160f 55%,${C.red} 100%);padding:38px 36px 34px">
         <p style="margin:0 0 14px;font:700 11px/1.4 ${SANS};letter-spacing:3px;text-transform:uppercase;color:${C.pink}">${esc(content.eyebrow)}</p>
@@ -129,6 +140,7 @@ export function renderText(content: EmailContent) {
     if (b.kind === 'quote') out.push(`${b.from ? `${b.from}: ` : ''}“${b.text}”`, '');
     if (b.kind === 'stats') out.push(...b.items.map(s => `${s.label}: ${s.value}${s.sub ? ` (${s.sub})` : ''}`), '');
     if (b.kind === 'details') out.push(...b.rows.map(([k, v]) => `${k}: ${v}`), '');
+    if (b.kind === 'code') out.push(`${b.label}: ${b.code}`, '');
   }
   if (content.cta) out.push(`${content.cta.label}: ${content.cta.url}`, '');
   if (content.note) out.push(content.note, '');
