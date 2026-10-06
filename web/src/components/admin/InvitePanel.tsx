@@ -53,13 +53,13 @@ export function InvitePanel({ expire, prefill, onUsedPrefill }: { expire: () => 
         body.dealershipName = dealershipName.trim();
       } else body.dealershipId = dealershipId;
     }
+    // Only when inviting the address from the enquiry; the server then marks it Invited.
+    const fromEnquiry = prefill && body.email.toLowerCase() === prefill.email.toLowerCase();
+    if (fromEnquiry) body.enquiryId = prefill.enquiryId;
     setBusy(true);
     try {
       const res = await api.post<{ emailSent: boolean; emailProblem?: string }>('/admin/invitations', body);
-      if (prefill && body.email.toLowerCase() === prefill.email.toLowerCase()) {
-        await api.patch(`/admin/enquiries/${encodeURIComponent(prefill.enquiryId)}`, { status: 'invited' }).catch(() => {});
-        onUsedPrefill?.();
-      }
+      if (fromEnquiry) onUsedPrefill?.();
       if (res.emailSent) {
         setOk(`Invitation sent to ${body.email}. They’ll appear under People as Invited.`);
         toast(`Invitation sent to ${body.email}`);

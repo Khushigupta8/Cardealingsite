@@ -11,6 +11,8 @@ const invitation = z.object({
   // Dealers join an existing dealership, or a new one is created from the name.
   dealershipId: z.uuid().optional(),
   dealershipName: z.string().trim().min(1).max(160).optional(),
+  // The website enquiry this invitation answers; it's marked Invited once the account exists.
+  enquiryId: z.uuid().optional(),
 });
 
 // Invite-only signup: creates the account and emails an activation link to APP_URL/activate.
@@ -62,6 +64,8 @@ export const POST = route(async req => {
     if (createdDealership) await db.from('dealerships').delete().eq('id', createdDealership);
     throw new Error(`Invitation failed: ${created.error.message}`);
   }
+
+  if (body.enquiryId) await db.from('enquiries').update({ status: 'invited' }).eq('id', body.enquiryId);
 
   // The account is fine even if the email can't go out: the admin can share the link with
   // "Copy link", and the response says plainly that nothing was emailed.

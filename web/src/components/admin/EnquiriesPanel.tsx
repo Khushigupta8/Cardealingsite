@@ -43,6 +43,27 @@ export function EnquiriesPanel({ expire, onInvite, onCounts }: { expire: () => v
     load();
   }, [load]);
 
+  // Remove is two-step: the first click arms the button for a few seconds.
+  const [armed, setArmed] = useState<string | null>(null);
+  useEffect(() => {
+    if (!armed) return;
+    const t = setTimeout(() => setArmed(null), 4000);
+    return () => clearTimeout(t);
+  }, [armed]);
+
+  const remove = async (e: Enquiry) => {
+    if (armed !== e.id) return setArmed(e.id);
+    setArmed(null);
+    try {
+      await api.del(`/admin/enquiries/${encodeURIComponent(e.id)}`);
+      toast(`Enquiry from ${e.dealership} removed`);
+      load();
+    } catch (err) {
+      const msg = errorText(err);
+      if (msg) toast(msg, 'error');
+    }
+  };
+
   const move = async (e: Enquiry, next: EnquiryStatus) => {
     try {
       await api.patch(`/admin/enquiries/${encodeURIComponent(e.id)}`, { status: next });
@@ -108,16 +129,24 @@ export function EnquiriesPanel({ expire, onInvite, onCounts }: { expire: () => v
                   <td data-label="Per month">{e.monthlyVolume || '-'}</td>
                   <td data-label="Received" className="date">{date(e.createdAt)}</td>
                   <td data-label="Status">
-                    <select className="status-select" aria-label={`Status for ${e.dealership}`} value={e.status} onChange={ev => move(e, ev.target.value as EnquiryStatus)}>
-                      {STATUSES.map(s => <option key={s.id} value={s.id}>{s.label}</option>)}
-                    </select>
+                    {/* Invited is set by sending the invitation, so it's shown, not chosen. */}
+                    {e.status === 'invited' ? (
+                      <span className="pill ok"><Icon name="check" />Invited</span>
+                    ) : (
+                      <select className="status-select" aria-label={`Status for ${e.dealership}`} value={e.status} onChange={ev => move(e, ev.target.value as EnquiryStatus)}>
+                        {STATUSES.filter(s => s.id !== 'invited').map(s => <option key={s.id} value={s.id}>{s.label}</option>)}
+                      </select>
+                    )}
                   </td>
-                  <td className="num" data-label="">
+                  <td className="num row-actions" data-label="">
                     {e.status !== 'invited' && e.status !== 'closed' && (
                       <button className="btn btn-sm btn-primary" data-invite-enquiry={e.id} onClick={() => onInvite({ email: e.email, dealershipName: e.dealership, enquiryId: e.id })}>
                         Invite
                       </button>
-                    )}
+                    )}{' '}
+                    <button className="btn btn-sm btn-danger" data-remove-enquiry={e.id} onClick={() => remove(e)}>
+                      {armed === e.id ? 'Confirm remove' : 'Remove'}
+                    </button>
                   </td>
                 </tr>
               ))
@@ -128,6 +157,8 @@ export function EnquiriesPanel({ expire, onInvite, onCounts }: { expire: () => v
           <div className="empty" id="enquiries-empty">
             {status === 'new' ? (
               <><strong>No new enquiries</strong>When a dealership uses “Request an invitation” on the website, it appears here.</>
+            ) : status === 'invited' ? (
+              <><strong>Nothing here</strong>Enquiries appear here once you send them an invitation with Invite.</>
             ) : (
               <><strong>Nothing here</strong>Enquiries you move to this status appear here.</>
             )}

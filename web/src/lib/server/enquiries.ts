@@ -1,6 +1,9 @@
 import 'server-only';
 
 export const ENQUIRY_STATUSES = ['new', 'contacted', 'invited', 'closed'] as const;
+// What an admin can set by hand. "invited" is only set when an invitation is actually sent
+// from the enquiry (POST /admin/invitations with enquiryId), so it is always true.
+export const MANUAL_ENQUIRY_STATUSES = ['new', 'contacted', 'closed'] as const;
 
 export const toEnquiry = (e: Record<string, unknown>) => ({
   id: e.id as string,
