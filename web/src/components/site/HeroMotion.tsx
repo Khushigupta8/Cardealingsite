@@ -4,7 +4,8 @@ import { useEffect, useRef } from 'react';
 
 type Puff = { x: number; y: number; vx: number; vy: number; r: number; grow: number; life: number; max: number };
 
-// The hero car drives right as you scroll, trailing exhaust smoke. Rendered inside the hero section.
+// The hero car drives right as you scroll, trailing exhaust smoke; reversing (scrolling up) also
+// smokes the front tyres. Rendered inside the hero section.
 export function HeroMotion() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -54,7 +55,16 @@ export function HeroMotion() {
       }
       const left = b.left + (b.width - w) / 2 - h.left;
       const top = b.top + (b.height - ht) / 2 - h.top;
-      return { x: left + w * 0.05, y: top + ht * 0.5, h: ht, right: left + w, heroWidth: h.width };
+      return {
+        x: left + w * 0.05,
+        y: top + ht * 0.5,
+        h: ht,
+        right: left + w,
+        heroWidth: h.width,
+        // Front wheels (the car faces right): near the nose, on the top and bottom edges.
+        frontX: left + w * 0.8,
+        frontY: [top + ht * 0.08, top + ht * 0.92],
+      };
     };
 
     const draw = (t: number) => {
@@ -101,7 +111,26 @@ export function HeroMotion() {
           max: 900 + Math.random() * 700,
         });
       }
-      if (puffs.length > 260) puffs.splice(0, puffs.length - 260);
+      // Reversing (scrolling up): the front tyres spin and smoke billows out from both sides,
+      // left behind as the car backs away.
+      if (delta < 0) {
+        for (const [side, y] of r.frontY.entries()) {
+          const out = side === 0 ? -1 : 1;
+          for (let i = 0; i < Math.ceil(n * 0.7); i++) {
+            puffs.push({
+              x: r.frontX + (Math.random() - 0.5) * r.h * 0.12,
+              y: y + out * Math.random() * r.h * 0.04,
+              vx: (0.02 + Math.random() * 0.06),
+              vy: out * (0.015 + Math.random() * 0.035),
+              r: r.h * (0.06 + Math.random() * 0.07),
+              grow: 0.03 + Math.random() * 0.04,
+              life: 0,
+              max: 1000 + Math.random() * 800,
+            });
+          }
+        }
+      }
+      if (puffs.length > 360) puffs.splice(0, puffs.length - 360);
       if (!running) {
         running = true;
         lastT = performance.now();
