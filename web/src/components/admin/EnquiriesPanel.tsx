@@ -98,13 +98,15 @@ export function EnquiriesPanel({ expire, onInvite, onCounts }: { expire: () => v
                     <div className="title">{e.dealership}</div>
                     {e.message && <div className="enquiry-msg">“{e.message}”</div>}
                   </td>
-                  <td data-label="Contact">
+                  {/* Full width on the mobile card, so an email address isn't split mid-word. */}
+                  <td data-label="Contact" className="cell-wide">
                     <div>{e.name}</div>
-                    <div className="sub"><a href={`mailto:${e.email}`}>{e.email}</a>{e.phone ? ` · ${e.phone}` : ''}</div>
+                    <div className="sub"><a href={`mailto:${e.email}`}>{e.email}</a></div>
+                    {e.phone && <div className="sub"><a href={`tel:${e.phone.replace(/[^\d+]/g, '')}`}>{e.phone}</a></div>}
                   </td>
                   <td data-label="Location">{e.location || '-'}</td>
                   <td data-label="Per month">{e.monthlyVolume || '-'}</td>
-                  <td data-label="Received">{date(e.createdAt)}</td>
+                  <td data-label="Received" className="date">{date(e.createdAt)}</td>
                   <td data-label="Status">
                     <select className="status-select" aria-label={`Status for ${e.dealership}`} value={e.status} onChange={ev => move(e, ev.target.value as EnquiryStatus)}>
                       {STATUSES.map(s => <option key={s.id} value={s.id}>{s.label}</option>)}

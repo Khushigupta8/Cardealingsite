@@ -147,7 +147,7 @@ export function PeoplePanel({ expire, onInvite, meId }: { expire: () => void; on
                         <div className="sub" title="Accepted the membership terms">Terms accepted {date(p.termsAcceptedAt)}</div>
                       )}
                     </td>
-                    <td data-label="Invited">{date(p.invitedAt)}</td>
+                    <td data-label="Invited" className="date">{date(p.invitedAt)}</td>
                     <td className="num row-actions" data-label="">
                       <button className="btn btn-sm" data-copy-link={p.id} disabled={!!busy[p.id] && busy[p.id] !== 'sent'} title="Copy a one-time sign-in link to send yourself (no email)" onClick={() => copyLink(p)}>
                         Copy link

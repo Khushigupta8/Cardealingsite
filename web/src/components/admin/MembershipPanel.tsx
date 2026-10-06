@@ -290,7 +290,7 @@ export function MembershipPanel({ expire }: { expire: () => void }) {
                     )}
                   </td>
                   <td data-label="Status"><StatusPill d={d} required={!!settings?.membershipRequired} /></td>
-                  <td data-label="Renews">{d.currentPeriodEnd && !d.exempt ? date(d.currentPeriodEnd) : '-'}</td>
+                  <td data-label="Renews" className="date">{d.currentPeriodEnd && !d.exempt ? date(d.currentPeriodEnd) : '-'}</td>
                   <td data-label="Complimentary">
                     <label className="switch" style={{ fontWeight: 400 }}>
                       <input

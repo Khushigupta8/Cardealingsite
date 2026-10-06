@@ -211,7 +211,7 @@ function Workspace({ me, onSignOut, expire }: { me: Me; onSignOut: () => void; e
                     <td className="mono" data-label="VIN">{v.vin}</td>
                     <td className="num" data-label="Mileage">{miles(v.mileage)}</td>
                     <td className="num" data-label={status === 'completed' ? 'Recommended' : 'Asking'}>{status === 'completed' ? money(v.review?.recommendedPrice) : money(v.askingPrice)}</td>
-                    <td data-label={status === 'completed' ? 'Completed' : 'Submitted'}>{date(status === 'completed' ? v.completedAt : v.submittedAt)}</td>
+                    <td data-label={status === 'completed' ? 'Completed' : 'Submitted'} className="date">{date(status === 'completed' ? v.completedAt : v.submittedAt)}</td>
                     <td data-label="Status">{STATUS_PILL[v.status]}</td>
                   </tr>
                 ))
