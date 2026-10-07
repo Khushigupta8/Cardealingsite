@@ -38,7 +38,7 @@ export function IntroPanels() {
             <br />
             Your entire queue.
           </h2>
-          <p>Submit from your phone. Track each review. Keep completed grades, recommendations and reports in one place.</p>
+          <p>Submit from your phone. Track each review. Keep completed recommendations and reports in one place.</p>
         </div>
       </article>
     </section>

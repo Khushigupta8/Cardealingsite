@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { api, type Vehicle, type VinResult } from '@/lib/client/api';
+import { GRADES } from '@/components/console/format';
 
 const VIN_RE = /^[A-HJ-NPR-Z0-9]{17}$/;
 const thisYear = new Date().getFullYear();
@@ -14,6 +15,7 @@ export type VehicleInput = {
   trim: string | null;
   mileage: number | null;
   askingPrice: number | null;
+  conditionGrade: number | null;
   conditionNotes: string | null;
 };
 
@@ -29,6 +31,7 @@ export function readFields(form: HTMLFormElement): VehicleInput {
     trim: str('trim') || null,
     mileage: num('mileage'),
     askingPrice: num('askingPrice'),
+    conditionGrade: num('conditionGrade'),
     conditionNotes: str('conditionNotes') || null,
   };
 }
@@ -39,6 +42,7 @@ export function validate(v: VehicleInput) {
   if (!v.make || !v.model) return 'Enter the make and model.';
   if (v.mileage == null || !(v.mileage >= 0)) return 'Enter the mileage.';
   if (v.askingPrice != null && !(v.askingPrice >= 0)) return 'Asking price must be a positive number.';
+  if (v.conditionGrade == null) return 'Rate the vehicle’s condition from 1 to 5.';
   return '';
 }
 
@@ -115,6 +119,16 @@ export function VehicleFields({ v }: { v?: Partial<Vehicle> }) {
           <span className="money"><input name="askingPrice" type="number" inputMode="numeric" min={0} step={100} defaultValue={v?.askingPrice ?? ''} /></span>
         </label>
       </div>
+      {/* The dealer has the car in front of them, so they rate its condition; we price from it. */}
+      <fieldset className="grades">
+        <legend>Condition rating <small className="optional">· your honest view, as we don’t see the car in person</small></legend>
+        {[5, 4, 3, 2, 1].map(n => (
+          <label key={n}>
+            <input type="radio" name="conditionGrade" value={n} defaultChecked={v?.conditionGrade === n} required />
+            <span><b>{n}</b><small>{GRADES[n]}</small></span>
+          </label>
+        ))}
+      </fieldset>
       <label className="field">
         Condition notes
         <textarea name="conditionNotes" maxLength={5000} placeholder="Service history, wear, damage, anything a buyer would notice" defaultValue={v?.conditionNotes ?? ''} />

@@ -261,7 +261,7 @@ function Detail({ v, errorText, onPhoto, onChanged }: { v: VehicleDetail; errorT
             <ReportButton vehicleId={v.id} errorText={errorText} primary />
           </div>
           <div className="report-figs">
-            <div><span>Condition grade</span><strong>{r.conditionGrade}/5</strong><small>{GRADES[r.conditionGrade]}</small></div>
+            <div><span>Your condition rating</span><strong>{r.conditionGrade}/5</strong><small>{GRADES[r.conditionGrade]}</small></div>
             <div>
               <span>Recommended listing</span>
               <strong>{money(r.recommendedPrice)}</strong>

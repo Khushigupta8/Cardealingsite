@@ -195,6 +195,7 @@ textarea { min-height: 96px; resize: vertical; }
 .grades label:hover span { border-color: #555; }
 .grades input:checked + span { border-color: var(--accent); background: var(--accent-soft); }
 .grades input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 2px; }
+.grades legend small { font-size: inherit; }
 .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .money { position: relative; display: flex; align-items: center; }
 .money::before { content: '$'; position: absolute; left: 12px; color: var(--muted); }

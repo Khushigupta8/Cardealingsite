@@ -29,6 +29,7 @@ export interface Vehicle {
   model: string;
   trim: string | null;
   mileage: number;
+  conditionGrade: number | null; // the dealer's own 1-5 rating
   conditionNotes: string | null;
   askingPrice: number | null;
   status: Status;

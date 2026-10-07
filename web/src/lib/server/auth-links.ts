@@ -44,7 +44,7 @@ export async function emailAuthLink(kind: LinkKind, email: string, url: string) 
       {
         kind: 'details',
         rows: [
-          ['Condition grade', 'Human-reviewed, from 1 to 5'],
+          ['Condition rating', 'Yours, from 1 to 5, on every report'],
           ['Listing price', 'A recommended price with perspective'],
           ['Branded report', 'A PDF to keep on file or share'],
         ],

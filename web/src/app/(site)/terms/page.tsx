@@ -23,8 +23,8 @@ export default function TermsPage() {
       <section>
         <h2>The service</h2>
         <p>
-          Dealer Review is an invitation-only vehicle review service for dealerships. You submit vehicle details and photos through
-          a private workspace, and our review team returns a condition grade, a recommended listing price and reviewer notes.
+          Dealer Review is an invitation-only vehicle review service for dealerships. You submit vehicle details, photos and your own
+          condition rating through a private workspace, and our review team returns a recommended listing price and reviewer notes.
         </p>
         <p>
           Reviews are completed by people using the information and photos you provide. The recommended price supports your

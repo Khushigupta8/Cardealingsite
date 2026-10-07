@@ -17,7 +17,7 @@ const STATUS_PILL: Record<Status, React.ReactNode> = {
 const EMPTY: Record<Status, [string, string]> = {
   pending: ['Nothing in review', 'Vehicles you submit wait here until a reviewer completes them.'],
   needs_info: ['Nothing needs your attention', 'If a reviewer asks for more detail, the vehicle appears here.'],
-  completed: ['No completed reviews yet', 'Finished reviews, with grades and recommended prices, appear here.'],
+  completed: ['No completed reviews yet', 'Finished reviews, with recommended prices, appear here.'],
 };
 
 export function DealerWorkspace() {
@@ -226,7 +226,7 @@ function Workspace({ me, onSignOut, expire }: { me: Me; onSignOut: () => void; e
                 <>
                   <strong>Submit your first vehicle</strong>
                   {canSubmit
-                    ? 'Add the VIN, mileage, notes and photos. Our team returns a condition grade and a recommended listing price.'
+                    ? 'Add the VIN, mileage, your condition rating, notes and photos. Our team returns a recommended listing price.'
                     : 'Once your membership is active you can add the VIN, mileage, notes and photos here.'}
                   {canSubmit && (
                     <>

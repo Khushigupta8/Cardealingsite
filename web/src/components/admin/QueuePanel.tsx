@@ -12,7 +12,7 @@ const STATUS_LABEL: Record<Status, string> = { pending: 'Pending review', needs_
 const EMPTY: Record<Status, [string, string]> = {
   pending: ['Queue is clear', 'New submissions from dealerships will appear here.'],
   needs_info: ['Nothing waiting on dealers', 'Cars you send back for more information appear here.'],
-  completed: ['No completed reviews yet', 'Graded vehicles appear here.'],
+  completed: ['No completed reviews yet', 'Completed vehicles appear here.'],
 };
 
 export function QueuePanel({
@@ -243,6 +243,7 @@ function VehicleDrawer({ id, onClose, onDone, expire }: { id: string | null; onC
     ? [
         ['Dealership', v.dealershipName || '-'],
         ['Mileage', miles(v.mileage)],
+        ['Dealer rating', v.conditionGrade ? `${v.conditionGrade}/5 · ${GRADES[v.conditionGrade]}` : 'Not rated'],
         ['Dealer asking', money(v.askingPrice)],
         ['VIN', v.vin],
         ['Submitted', date(v.submittedAt)],
@@ -283,7 +284,7 @@ function VehicleDrawer({ id, onClose, onDone, expire }: { id: string | null; onC
                   <ReportButton vehicleId={v.id} errorText={errorText} />
                 </div>
                 <div className="result-figs">
-                  <div><span>Condition</span><strong>{v.review.conditionGrade}/5 · {GRADES[v.review.conditionGrade]}</strong></div>
+                  <div><span>Condition (dealer’s rating)</span><strong>{v.review.conditionGrade}/5 · {GRADES[v.review.conditionGrade]}</strong></div>
                   <div><span>Recommended listing</span><strong>{money(v.review.recommendedPrice)}</strong></div>
                 </div>
                 {v.review.notes && <p className="notes">{v.review.notes}</p>}
@@ -337,15 +338,12 @@ function GradeForm({ v, onInfo, onDone, errorText }: ActProps & { onInfo: () => 
     e.preventDefault();
     if (busy) return;
     const f = new FormData(e.currentTarget);
-    const grade = f.get('conditionGrade');
     const price = String(f.get('recommendedPrice') ?? '');
-    if (!grade) return setError('Pick a condition grade.');
     if (price === '' || !(Number(price) >= 0)) return setError('Enter a recommended listing price.');
     setBusy(true);
     setError('');
     try {
       await api.post(`/vehicles/${encodeURIComponent(v.id)}/review`, {
-        conditionGrade: Number(grade),
         recommendedPrice: Number(price),
         notes: String(f.get('notes') || '') || null,
       });
@@ -357,15 +355,12 @@ function GradeForm({ v, onInfo, onDone, errorText }: ActProps & { onInfo: () => 
   };
   return (
     <form id="grade-form" className="form-stack" noValidate onSubmit={submit}>
-      <fieldset className="grades">
-        <legend>Condition grade</legend>
-        {[5, 4, 3, 2, 1].map(n => (
-          <label key={n}>
-            <input type="radio" name="conditionGrade" value={n} />
-            <span><b>{n}</b><small>{GRADES[n]}</small></span>
-          </label>
-        ))}
-      </fieldset>
+      {/* Dealers rate condition themselves (they have the car in front of them); we price it. */}
+      {v.conditionGrade ? (
+        <p className="hint" id="dealer-grade">Dealer rated the condition <strong>{v.conditionGrade}/5 · {GRADES[v.conditionGrade]}</strong>.</p>
+      ) : (
+        <p className="form-error" id="dealer-grade">The dealer hasn’t rated this vehicle’s condition yet. Ask them for it before completing the review.</p>
+      )}
       <div className="row-2">
         <label className="field">
           Recommended listing price
@@ -380,7 +375,7 @@ function GradeForm({ v, onInfo, onDone, errorText }: ActProps & { onInfo: () => 
       <p className="form-error">{error}</p>
       <div className="foot-actions">
         <button type="button" className="link-btn" id="show-info" onClick={onInfo}>Need more from the dealer?</button>
-        <button className="btn btn-primary btn-lg" type="submit" disabled={busy}><Icon name="check" />Complete review</button>
+        <button className="btn btn-primary btn-lg" type="submit" disabled={busy || !v.conditionGrade}><Icon name="check" />Complete review</button>
       </div>
     </form>
   );
@@ -415,7 +410,7 @@ function InfoForm({ v, onGrade, onDone, errorText }: ActProps & { onGrade: () =>
       <p className="hint">The car moves to <em>Needs info</em> and returns to this queue when the dealer resubmits.</p>
       <p className="form-error">{error}</p>
       <div className="foot-actions">
-        <button type="button" className="link-btn" id="show-grade" onClick={onGrade}>Back to grading</button>
+        <button type="button" className="link-btn" id="show-grade" onClick={onGrade}>Back to review</button>
         <button className="btn btn-lg" type="submit" disabled={busy}>Send back to dealer</button>
       </div>
     </form>

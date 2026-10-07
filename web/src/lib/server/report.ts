@@ -173,7 +173,7 @@ export async function buildReportPdf(v: VehicleRow, review: { conditionGrade: nu
     page.drawText(safe(big), { x: x + 18, y: top - 52, size: 26, font: bold, color: INK });
     page.drawText(safe(sub), { x: x + 18, y: top - 70, size: 9.5, font: regular, color: MUTED });
   };
-  panel(M, 'Condition grade', `${review.conditionGrade} / 5`, GRADES[review.conditionGrade] ?? '', true);
+  panel(M, 'Condition rating', `${review.conditionGrade} / 5`, `${GRADES[review.conditionGrade] ?? ''}${v.condition_grade ? ' · rated by the dealership' : ''}`, true);
   const diff = v.asking_price == null ? null : review.recommendedPrice - Number(v.asking_price);
   panel(
     M + pw + gap,

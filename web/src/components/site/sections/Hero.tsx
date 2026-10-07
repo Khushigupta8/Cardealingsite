@@ -26,7 +26,7 @@ export function Hero() {
             <br className="mobile-only" /> A confident listing.
           </h2>
           <p>
-            Submit your vehicle details and photos. Our team returns a condition grade,
+            Submit your vehicle details, photos and condition rating. Our team returns a
             <br className="desktop-only" /> recommended listing price and a branded report - inside your private portal.
           </p>
           <div className="hero-actions">

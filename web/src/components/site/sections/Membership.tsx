@@ -41,7 +41,7 @@ export function Membership() {
             <i className="ph ph-check" aria-hidden="true"></i>
           </div>
           <div className="ledger-item">
-            <span>Human-reviewed condition assessments</span>
+            <span>A human review of every submission</span>
             <i className="ph ph-check" aria-hidden="true"></i>
           </div>
           <div className="ledger-item">

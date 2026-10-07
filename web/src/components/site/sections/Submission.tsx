@@ -23,7 +23,7 @@ export function Submission() {
       <div className="submission-grid">
         <div className="submission-copy">
           <p className="body-copy">
-            Add the VIN, mileage, condition notes and photos in your phone’s browser. VIN lookup fills the year, make and model
+            Add the VIN, mileage, your condition rating, notes and photos in your phone’s browser. VIN lookup fills the year, make and model
             where a match is available.
           </p>
           <div className="submission-specs">
@@ -36,7 +36,7 @@ export function Submission() {
             <div>
               <span>02</span>
               <p>
-                <strong>The context</strong>Your condition notes and optional asking price
+                <strong>The context</strong>Your 1-5 condition rating, notes and optional asking price
               </p>
             </div>
             <div>
@@ -69,7 +69,7 @@ export function Submission() {
           </div>
           <div className="console-output">
             <p>What comes back</p>
-            <span>Condition grade</span>
+            <span>Reviewer notes</span>
             <span>Listing recommendation</span>
             <span>Branded report</span>
           </div>

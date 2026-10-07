@@ -20,8 +20,8 @@ export function Faq() {
           </summary>
           <div>
             <p>
-              An invitation-only vehicle assessment service for dealerships. Submit your vehicle details and photos through a
-              private portal. Our review team returns a condition grade, recommended listing price and notes.
+              An invitation-only vehicle assessment service for dealerships. Submit your vehicle details, photos and your own
+              condition rating through a private portal. Our review team returns a recommended listing price and notes.
             </p>
           </div>
         </details>
@@ -42,7 +42,7 @@ export function Faq() {
           </summary>
           <div>
             <p>
-              Add the VIN, year, make, model, trim, mileage, condition notes and photos. An asking price is optional. VIN lookup
+              Add the VIN, year, make, model, trim, mileage, a condition rating from 1 to 5, condition notes and photos. An asking price is optional. VIN lookup
               can fill the year, make and model where a match is available. Check the details before submitting.
             </p>
           </div>

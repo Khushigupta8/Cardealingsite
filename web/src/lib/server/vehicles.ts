@@ -9,7 +9,7 @@ export const STATUSES = ['pending', 'needs_info', 'completed'] as const;
 export type Status = (typeof STATUSES)[number];
 
 export const VEHICLE_COLUMNS =
-  'id, dealership_id, vin, year, make, model, trim, mileage, condition_notes, asking_price, status, info_request, submitted_at, updated_at, completed_at, dealership:dealerships(name), summary:reviews(condition_grade, recommended_price)';
+  'id, dealership_id, vin, year, make, model, trim, mileage, condition_grade, condition_notes, asking_price, status, info_request, submitted_at, updated_at, completed_at, dealership:dealerships(name), summary:reviews(condition_grade, recommended_price)';
 
 export type VehicleRow = {
   id: string;
@@ -20,6 +20,7 @@ export type VehicleRow = {
   model: string;
   trim: string | null;
   mileage: number;
+  condition_grade: number | null;
   condition_notes: string | null;
   asking_price: number | null;
   status: Status;
@@ -41,6 +42,8 @@ export const toVehicle = (v: VehicleRow) => ({
   model: v.model,
   trim: v.trim,
   mileage: v.mileage,
+  // The dealer's own 1-5 rating; the review team prices the car from it.
+  conditionGrade: v.condition_grade,
   conditionNotes: v.condition_notes,
   askingPrice: v.asking_price === null ? null : Number(v.asking_price),
   status: v.status,
@@ -81,6 +84,7 @@ export const vehicleFields = z.object({
   model: z.string().trim().min(1).max(80),
   trim: z.string().trim().max(80).nullish(),
   mileage: z.coerce.number().int().min(0).max(2_000_000),
+  conditionGrade: z.coerce.number().int().min(1).max(5),
   conditionNotes: z.string().trim().max(5000).nullish(),
   askingPrice: z.coerce.number().min(0).max(100_000_000).nullish(),
 });
@@ -93,6 +97,7 @@ export const toColumns = (v: Partial<z.infer<typeof vehicleFields>>) => {
   if (v.model !== undefined) row.model = v.model;
   if (v.trim !== undefined) row.trim = v.trim || null;
   if (v.mileage !== undefined) row.mileage = v.mileage;
+  if (v.conditionGrade !== undefined) row.condition_grade = v.conditionGrade;
   if (v.conditionNotes !== undefined) row.condition_notes = v.conditionNotes || null;
   if (v.askingPrice !== undefined) row.asking_price = v.askingPrice ?? null;
   return row;

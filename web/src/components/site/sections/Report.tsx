@@ -33,13 +33,13 @@ export function Report() {
                   4<span>/5</span>
                 </strong>
                 <p>
-                  Condition grade
+                  Condition rating
                   <br />
                   <span>Illustrative scale</span>
                 </p>
               </div>
               <h3>KNOW WHERE IT STANDS.</h3>
-              <p>A clear grade based on the vehicle information and photos you submit.</p>
+              <p>You rate the condition from 1 to 5 when you submit. It stays on the report, next to our price.</p>
               <button className="card-link" data-report="">
                 Explore the assessment <i className="ph ph-arrow-up-right" aria-hidden="true"></i>
               </button>
@@ -77,7 +77,7 @@ export function Report() {
                 <p>“Well presented. Minor interior wear consistent with mileage.”</p>
               </div>
               <h3>THE REASONING, RECORDED.</h3>
-              <p>Reviewer notes and the date graded stay with your vehicle’s completed report.</p>
+              <p>Reviewer notes and the review date stay with your vehicle’s completed report.</p>
               <button className="card-link" data-report="">
                 Read the sample notes <i className="ph ph-arrow-up-right" aria-hidden="true"></i>
               </button>

@@ -6,16 +6,18 @@ import { after } from 'next/server';
 import { VEHICLE_COLUMNS, asRow, getReview, loadVehicle, toVehicle } from '@/lib/server/vehicles';
 import { emailsFor, sendEmail } from '@/lib/server/email';
 
-// Reviewer grades the vehicle; this completes it.
+// Reviewer prices the vehicle; this completes it. The condition grade is the dealer's own rating,
+// copied onto the review so the result, email and report keep it.
 const GRADE_WORDS: Record<number, string> = { 5: 'Excellent', 4: 'Good', 3: 'Fair', 2: 'Rough', 1: 'Poor' };
 
 export const POST = route<{ id: string }>(async (req, { id }) => {
   const user = await requireUser(req, 'reviewer', 'admin');
   const vehicle = await loadVehicle(id, user);
   if (vehicle.status !== 'pending') throw conflict('Only pending vehicles can be reviewed');
+  const grade = vehicle.condition_grade;
+  if (!grade) throw conflict('The dealer hasn’t rated this vehicle’s condition yet. Ask them for it before completing the review.');
   const body = z
     .object({
-      conditionGrade: z.coerce.number().int().min(1).max(5),
       recommendedPrice: z.coerce.number().min(0).max(100_000_000),
       notes: z.string().trim().max(5000).nullish(),
     })
@@ -23,7 +25,7 @@ export const POST = route<{ id: string }>(async (req, { id }) => {
 
   const db = admin();
   // Complete the car only if it is still pending, so two reviewers (or a review racing an
-  // info request) can't both act on it. Then save the grade; undo the completion if that fails.
+  // info request) can't both act on it. Then save the review; undo the completion if that fails.
   const row = maybe(
     await db
       .from('vehicles')
@@ -37,7 +39,7 @@ export const POST = route<{ id: string }>(async (req, { id }) => {
   const saved = await db.from('reviews').upsert({
     vehicle_id: vehicle.id,
     reviewer_id: user.id,
-    condition_grade: body.conditionGrade,
+    condition_grade: grade,
     recommended_price: body.recommendedPrice,
     notes: body.notes || null,
     graded_at: new Date().toISOString(),
@@ -51,7 +53,7 @@ export const POST = route<{ id: string }>(async (req, { id }) => {
     sendEmail({
       to: await emailsFor({ role: 'dealer', dealershipId: vehicle.dealership_id }),
       subject: `Your review is ready: ${name}`,
-      preheader: `Grade ${body.conditionGrade}/5 · recommended $${body.recommendedPrice.toLocaleString('en-US')}`,
+      preheader: `Recommended listing $${body.recommendedPrice.toLocaleString('en-US')}`,
       eyebrow: 'Review complete',
       title: ['Your review', 'is ready.'],
       blocks: [
@@ -59,7 +61,7 @@ export const POST = route<{ id: string }>(async (req, { id }) => {
         {
           kind: 'stats',
           items: [
-            { label: 'Condition grade', value: `${body.conditionGrade}/5`, sub: GRADE_WORDS[body.conditionGrade] },
+            { label: 'Your condition rating', value: `${grade}/5`, sub: GRADE_WORDS[grade] },
             { label: 'Recommended listing', value: `$${body.recommendedPrice.toLocaleString('en-US')}` },
           ],
         },
