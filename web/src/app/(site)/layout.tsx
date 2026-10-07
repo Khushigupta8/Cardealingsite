@@ -13,8 +13,9 @@ export const viewport: Viewport = { themeColor: '#151515' };
 // Root layout for the public marketing site. The console has its own root layout,
 // so the two stylesheets never mix.
 export default function SiteLayout({ children }: { children: React.ReactNode }) {
-  // Headline and icon fonts are needed above the fold.
-  for (const font of ['/fonts/orbitron-700.woff2', '/fonts/phosphor.woff2']) {
+  // Every Orbitron weight (headline 900, nav 700, labels 500) and the icon font are needed above
+  // the fold; they're tiny, and preloading them avoids a flash of the fallback font.
+  for (const font of ['/fonts/orbitron-900.woff2', '/fonts/orbitron-700.woff2', '/fonts/orbitron-500.woff2', '/fonts/phosphor.woff2']) {
     preload(font, { as: 'font', type: 'font/woff2', crossOrigin: 'anonymous' });
   }
   return (
