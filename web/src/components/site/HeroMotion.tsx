@@ -19,6 +19,7 @@ export function HeroMotion() {
     if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
     const header = document.querySelector<HTMLElement>('.site-header');
+    const sideLabel = hero.querySelector<HTMLElement>('.hero-side.right');
     const puffs: Puff[] = [];
     let running = false;
     let lastT = 0;
@@ -141,9 +142,11 @@ export function HeroMotion() {
     const update = () => {
       queued = false;
       const p = Math.min(1, Math.max(0, scrollY / driveEnd()));
-      // Stay on the red stage: the nose stops before the stage's right edge (6% in from the side).
+      // Stay on the red stage: the nose stops short of the "Detail by detail" label (or, where
+      // that's hidden, 6% in from the side) so it never covers any words.
       const r = rear();
-      const room = Math.max(0, r.heroWidth * 0.94 - (r.right - lastShift));
+      const label = sideLabel?.offsetParent ? sideLabel.getBoundingClientRect().left - hero.getBoundingClientRect().left - 24 : r.heroWidth * 0.94;
+      const room = Math.max(0, label - (r.right - lastShift));
       // On phones and tablets the car already fills the stage, so there's little or no room;
       // let it drive a proper distance and roll partly out of frame instead of standing still.
       const maxShift = room >= r.heroWidth * 0.1 ? room : r.heroWidth * 0.3;

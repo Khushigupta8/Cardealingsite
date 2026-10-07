@@ -4749,3 +4749,17 @@ main{overflow-x:clip}
 .hero-side,.ledger-top .eyebrow{font-size:8px!important}
 .hero-rail p,.hero-rail strong{font-size:7px!important;line-height:1.5!important}
 }
+/* Hero car sits below "REVIEWED." instead of over it: its top follows the headline's size
+   (headline top + font size), and its height is what's left above the message. */
+.hero-car{top:calc(147px + min(11.9vw,174px));height:calc(502px - min(11.9vw,174px))}
+@media(min-width:1024px){.hero-inner{height:865px}}
+@media(min-width:1600px){.hero-inner{height:940px}.hero-car{top:338px;height:390px}}
+@media(max-width:1100px){.hero-car{top:calc(155px + 12vw);height:calc(499px - 12vw)}}
+@media(min-width:761px) and (max-width:1023px){.hero-inner{height:740px}.hero-car{height:calc(415px - 12vw)}}
+@media(max-width:760px){.hero-car{top:calc(152px + 12.7vw);height:calc(278px - 12.7vw)}.hero-side{display:none}}
+@media(max-width:365px){.hero-car{top:calc(158px + 12.7vw)}}
+/* Short laptop screens (e.g. 1366x768): keep the hero's original height so the message and button
+   stay on the first screen; the car shrinks a little instead. */
+@media(min-width:1024px) and (max-height:820px){.hero-inner{height:805px}.hero-car{height:calc(436px - min(11.9vw,174px))}}
+/* The backdrop's glowing ring runs behind the hero copy; a soft shadow keeps it readable. */
+.hero-message p{text-shadow:0 1px 10px #3a0000d9,0 0 2px #00000080}
