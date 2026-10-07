@@ -5,7 +5,7 @@ import './site.css';
 export const metadata: Metadata = {
   title: 'Dealer Review - Drive your next decision.',
   description:
-    'An invitation-only vehicle review service for dealerships. Submit vehicle details and photos for a human-reviewed condition grade, listing recommendation and branded report.',
+    'An invitation-only vehicle review service for dealerships. Submit vehicle details, photos and your condition rating for a human-reviewed listing recommendation and branded report.',
 };
 
 export const viewport: Viewport = { themeColor: '#151515' };
@@ -19,7 +19,17 @@ export default function SiteLayout({ children }: { children: React.ReactNode }) 
   }
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        {/* A tap on a dialog button before the page's script has loaded would do nothing (slow
+            phones); remember it so SiteDialogs can open that dialog once it's ready. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "document.addEventListener('click',function(e){var t=e.target.closest&&e.target.closest('[data-modal],[data-report],#sample-report');if(t&&!window.__siteDialogs)window.__earlyDialog=t},true)",
+          }}
+        />
+        {children}
+      </body>
     </html>
   );
 }

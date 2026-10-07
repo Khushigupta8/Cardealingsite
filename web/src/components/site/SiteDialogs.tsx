@@ -28,13 +28,18 @@ export function SiteDialogs({ children }: { children: React.ReactNode }) {
       location.replace((type === 'recovery' ? '/reset-password' : '/activate') + location.hash);
     }
 
-    const onClick = (e: MouseEvent) => {
-      const t = e.target as HTMLElement;
+    const open = (t: HTMLElement) => {
       const modal = t.closest<HTMLElement>('[data-modal]');
       if (modal) return setState({ kind: modal.dataset.modal as 'signin' });
       if (t.closest('[data-report], #sample-report')) setState({ kind: 'report' });
     };
+    const onClick = (e: MouseEvent) => open(e.target as HTMLElement);
     document.addEventListener('click', onClick);
+    // Open whatever was tapped before this ran (recorded by the inline script in the layout).
+    const w = window as Window & { __siteDialogs?: boolean; __earlyDialog?: HTMLElement };
+    w.__siteDialogs = true;
+    if (w.__earlyDialog?.isConnected) open(w.__earlyDialog);
+    w.__earlyDialog = undefined;
     return () => document.removeEventListener('click', onClick);
   }, []);
 
@@ -94,7 +99,7 @@ function Content({ state, close }: { state: DialogState; close: () => void }) {
           <h2>Built around your dealership.</h2>
           <p>One membership. A private place to submit vehicles and receive considered guidance from our team.</p>
           <ul className="modal-list">
-            <li>Expert condition grades and listing recommendations</li>
+            <li>Expert listing recommendations from your condition rating</li>
             <li>Branded, downloadable vehicle reports</li>
             <li>One private login for your dealership</li>
             <li>Membership and invoices managed through Stripe</li>
@@ -137,7 +142,7 @@ function Content({ state, close }: { state: DialogState; close: () => void }) {
           <p>Prepared for Westfield Motors · October 1, 2026</p>
           <Image src={v.image} alt={v.name} sizes="(max-width: 700px) 100vw, 640px" />
           <div className="report-data">
-            <div><span>Condition grade</span><strong>4 / 5</strong></div>
+            <div><span>Condition rating</span><strong>4 / 5</strong></div>
             <div><span>Recommended listing</span><strong>{price}</strong></div>
           </div>
           <h3>Reviewer notes</h3>
