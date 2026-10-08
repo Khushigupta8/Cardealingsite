@@ -2,9 +2,12 @@
 
 import { useRef, useState } from 'react';
 import Image from 'next/image';
-import graySuv from '@/assets/images/gray-suv.jpg';
+import audiQ5 from '@/assets/images/audi-q5.jpg';
 import bmw330 from '@/assets/images/bmw-330.jpg';
 import bmw530 from '@/assets/images/bmw-530.jpg';
+import mercedesGlc from '@/assets/images/mercedes-glc.jpg';
+import mustangGt from '@/assets/images/mustang-gt.jpg';
+import teslaModel3 from '@/assets/images/tesla-model-3.jpg';
 import { useSiteDialog, type SampleVehicle } from './SiteDialogs';
 
 type Tab = 'Pending' | 'Needs info' | 'Completed';
@@ -13,13 +16,13 @@ type Tab = 'Pending' | 'Needs info' | 'Completed';
 const VEHICLES: Record<Tab, SampleVehicle[]> = {
   Pending: [
     { name: '2023 BMW 530i', trim: 'M Sport', date: 'Oct 1, 2026', image: bmw530 },
-    { name: '2022 Porsche Macan', trim: 'Base · 32,480 mi', date: 'Oct 1, 2026', image: graySuv },
+    { name: '2021 Audi Q5', trim: 'Premium Plus · 28,910 mi', date: 'Oct 1, 2026', image: audiQ5 },
     { name: '2021 BMW 330e', trim: 'M Sport', date: 'Sep 30, 2026', image: bmw330 },
   ],
-  'Needs info': [{ name: '2022 Porsche Macan', trim: 'Rear interior photos requested', date: 'Sep 30, 2026', image: graySuv }],
+  'Needs info': [{ name: '2020 Mercedes-Benz GLC 300', trim: 'Rear interior photos requested', date: 'Sep 30, 2026', image: mercedesGlc }],
   Completed: [
-    { name: '2022 Porsche Macan', trim: 'Grade 4 / 5 · $39,500', date: 'Oct 1, 2026', image: graySuv },
-    { name: '2021 BMW 330e', trim: 'Grade 4 / 5 · $28,500', date: 'Sep 30, 2026', image: bmw330 },
+    { name: '2019 Ford Mustang GT', trim: 'Grade 4 / 5 · $32,500', date: 'Oct 1, 2026', image: mustangGt, price: '$32,500' },
+    { name: '2021 Tesla Model 3', trim: 'Grade 4 / 5 · $28,500', date: 'Sep 30, 2026', image: teslaModel3, price: '$28,500' },
   ],
 };
 const TABS: { id: string; status: Tab }[] = [

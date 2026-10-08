@@ -5,7 +5,7 @@ import Image, { type StaticImageData } from 'next/image';
 import { api } from '@/lib/client/api';
 import graySuv from '@/assets/images/gray-suv.jpg';
 
-export type SampleVehicle = { name: string; trim: string; date: string; image: StaticImageData };
+export type SampleVehicle = { name: string; trim: string; date: string; image: StaticImageData; price?: string };
 type DialogState =
   | { kind: 'signin' | 'activate' | 'membership' | 'support' }
   | { kind: 'report'; vehicle?: SampleVehicle }
@@ -134,7 +134,7 @@ function Content({ state, close }: { state: DialogState; close: () => void }) {
       );
     case 'report': {
       const v = state.vehicle ?? { name: '2022 Porsche Macan', image: graySuv, trim: '', date: '' };
-      const price = v.name.includes('BMW') ? '$28,500' : '$39,500';
+      const price = v.price ?? '$39,500';
       return (
         <>
           <p className="eyebrow">Dealer Review / Sample valuation report</p>

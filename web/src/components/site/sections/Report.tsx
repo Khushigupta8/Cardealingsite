@@ -1,8 +1,8 @@
 // Generated from the original static homepage; edit freely.
 import Image from 'next/image';
-import interiorDetail from '@/assets/images/interior-detail.jpg';
+import interiorCabin from '@/assets/images/interior-cabin.jpg';
 import graySuv from '@/assets/images/gray-suv.jpg';
-import dealerPhotographing from '@/assets/images/dealer-photographing.jpg';
+import reviewerInspection from '@/assets/images/reviewer-inspection.jpg';
 
 export function Report() {
   return (
@@ -24,7 +24,7 @@ export function Report() {
         <div className="report-grid">
           <article className="assessment-card">
             <div className="card-image">
-              <Image src={interiorDetail} alt="Detailed view of a vehicle interior" sizes="(max-width: 860px) 100vw, 33vw" />
+              <Image src={interiorCabin} alt="Leather cabin and steering wheel of a vehicle under review" sizes="(max-width: 860px) 100vw, 33vw" />
               <span className="card-index">01 / CONDITION</span>
             </div>
             <div className="card-body">
@@ -65,8 +65,8 @@ export function Report() {
           <article className="assessment-card">
             <div className="card-image">
               <Image
-                src={dealerPhotographing}
-                alt="Dealer documenting a vehicle for its review"
+                src={reviewerInspection}
+                alt="Reviewers inspecting a vehicle on a lift"
                 sizes="(max-width: 860px) 100vw, 33vw"
               />
               <span className="card-index">03 / CONTEXT</span>
