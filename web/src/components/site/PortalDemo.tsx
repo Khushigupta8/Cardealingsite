@@ -3,7 +3,8 @@
 import { useRef, useState } from 'react';
 import Image from 'next/image';
 import graySuv from '@/assets/images/gray-suv.jpg';
-import sampleBmw from '@/assets/images/sample-bmw.jpg';
+import bmw330 from '@/assets/images/bmw-330.jpg';
+import bmw530 from '@/assets/images/bmw-530.jpg';
 import { useSiteDialog, type SampleVehicle } from './SiteDialogs';
 
 type Tab = 'Pending' | 'Needs info' | 'Completed';
@@ -11,14 +12,14 @@ type Tab = 'Pending' | 'Needs info' | 'Completed';
 // Sample data for the homepage's portal preview.
 const VEHICLES: Record<Tab, SampleVehicle[]> = {
   Pending: [
-    { name: '2023 BMW 530i', trim: 'M Sport', date: 'Oct 1, 2026', image: sampleBmw },
+    { name: '2023 BMW 530i', trim: 'M Sport', date: 'Oct 1, 2026', image: bmw530 },
     { name: '2022 Porsche Macan', trim: 'Base · 32,480 mi', date: 'Oct 1, 2026', image: graySuv },
-    { name: '2021 BMW 330e', trim: 'M Sport', date: 'Sep 30, 2026', image: sampleBmw },
+    { name: '2021 BMW 330e', trim: 'M Sport', date: 'Sep 30, 2026', image: bmw330 },
   ],
   'Needs info': [{ name: '2022 Porsche Macan', trim: 'Rear interior photos requested', date: 'Sep 30, 2026', image: graySuv }],
   Completed: [
     { name: '2022 Porsche Macan', trim: 'Grade 4 / 5 · $39,500', date: 'Oct 1, 2026', image: graySuv },
-    { name: '2021 BMW 330e', trim: 'Grade 4 / 5 · $28,500', date: 'Sep 30, 2026', image: sampleBmw },
+    { name: '2021 BMW 330e', trim: 'Grade 4 / 5 · $28,500', date: 'Sep 30, 2026', image: bmw330 },
   ],
 };
 const TABS: { id: string; status: Tab }[] = [
