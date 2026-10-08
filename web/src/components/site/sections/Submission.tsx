@@ -1,6 +1,6 @@
 // Generated from the original static homepage; edit freely.
 import Image from 'next/image';
-import fordF150 from '@/assets/images/ford-f150.jpg';
+import mercedesG63 from '@/assets/images/mercedes-g63.jpg';
 
 export function Submission() {
   return (
@@ -56,13 +56,13 @@ export function Submission() {
             <span className="eyebrow">Submission preview</span>
             <span className="status">Pending review</span>
           </div>
-          <Image src={fordF150} alt="Blue Ford F-150 ready for assessment" sizes="(max-width: 860px) 100vw, 45vw" />
+          <Image src={mercedesG63} alt="Black Mercedes-AMG G 63 ready for assessment" sizes="(max-width: 860px) 100vw, 45vw" />
           <div className="console-bottom">
             <div>
               <span className="eyebrow">Vehicle record / 001</span>
-              <h3>2020 Ford F-150 Lariat</h3>
+              <h3>2022 Mercedes-AMG G 63</h3>
               <p>
-                41,260 mi <span>Photos attached</span>
+                18,240 mi <span>Photos attached</span>
               </p>
             </div>
             <i className="ph ph-arrow-down-right" aria-hidden="true"></i>
