@@ -36,11 +36,14 @@ export async function sendEmail({ to, subject, ...content }: { to: string[]; sub
   const html = renderEmail(email, site);
   const text = renderText(email);
 
+  // Replies go to a mailbox someone reads (EMAIL_REPLY_TO), not the sending address.
+  const replyTo = process.env.EMAIL_REPLY_TO?.trim() || undefined;
+
   try {
     const res = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ from: process.env.EMAIL_FROM || 'Dealer Review <onboarding@resend.dev>', to: recipients, subject, html, text }),
+      body: JSON.stringify({ from: process.env.EMAIL_FROM || 'Dealer Review <onboarding@resend.dev>', to: recipients, reply_to: replyTo, subject, html, text }),
       signal: AbortSignal.timeout(10_000),
     });
     if (!res.ok) {
