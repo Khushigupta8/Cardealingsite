@@ -53,6 +53,9 @@ only delivers to the Resend account owner. Set `EMAIL_TEST_INBOX` to that addres
 email goes there, with the intended recipients in the subject line. Remove it after setting
 `EMAIL_FROM` to an address on the verified domain.
 
+**Replies.** Set `EMAIL_REPLY_TO` to the mailbox that should get replies (production:
+`devon@ddautomanagement.com`); without it, replies go to `EMAIL_FROM`.
+
 ## Notes
 
 - Photos upload straight from the browser to Supabase Storage with one-time URLs
