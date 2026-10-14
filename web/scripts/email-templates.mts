@@ -12,13 +12,13 @@ const templates: { file: string; menu: string; subject: string; content: EmailCo
   {
     file: 'invite.html',
     menu: 'Invite user',
-    subject: 'You’re invited to Dealer Review',
+    subject: 'You’re invited to D&D Auto Management',
     content: {
       preheader: 'Your dealership has been invited to a private vehicle review workspace.',
       eyebrow: 'Private invitation',
       title: ['You’re invited.', 'Your workspace awaits.'],
       blocks: [
-        { kind: 'text', text: 'Your dealership has been invited to Dealer Review: a private workspace where you submit vehicles and our team returns a considered assessment.' },
+        { kind: 'text', text: 'Your dealership has been invited to D&D Auto Management: a private workspace where you submit vehicles and our team returns a considered assessment.' },
         {
           kind: 'details',
           rows: [
@@ -36,12 +36,12 @@ const templates: { file: string; menu: string; subject: string; content: EmailCo
   {
     file: 'reset-password.html',
     menu: 'Reset password',
-    subject: 'Your Dealer Review sign-in link',
+    subject: 'Your D&D Auto Management sign-in link',
     content: {
-      preheader: 'Use this link to choose a new password for your Dealer Review account.',
+      preheader: 'Use this link to choose a new password for your D&D Auto Management account.',
       eyebrow: 'Account security',
       title: ['Choose a', 'new password.'],
-      blocks: [{ kind: 'text', text: 'Use the button below to set a new password for your Dealer Review account. This link works once and expires in 24 hours.' }],
+      blocks: [{ kind: 'text', text: 'Use the button below to set a new password for your D&D Auto Management account. This link works once and expires in 24 hours.' }],
       cta: { label: 'Set my password', url: LINK },
       note: 'Didn’t ask for this? You can ignore this email; your password won’t change.',
     },
@@ -49,12 +49,12 @@ const templates: { file: string; menu: string; subject: string; content: EmailCo
   {
     file: 'confirm-signup.html',
     menu: 'Confirm signup',
-    subject: 'Confirm your Dealer Review email',
+    subject: 'Confirm your D&D Auto Management email',
     content: {
       preheader: 'Confirm your email address to finish setting up your account.',
       eyebrow: 'Confirm your email',
       title: ['One click.', 'You’re all set.'],
-      blocks: [{ kind: 'text', text: 'Confirm that {{ .Email }} is your email address to finish setting up your Dealer Review account.' }],
+      blocks: [{ kind: 'text', text: 'Confirm that {{ .Email }} is your email address to finish setting up your D&D Auto Management account.' }],
       cta: { label: 'Confirm my email', url: LINK },
       note: 'Didn’t sign up? You can ignore this email.',
     },
@@ -62,12 +62,12 @@ const templates: { file: string; menu: string; subject: string; content: EmailCo
   {
     file: 'magic-link.html',
     menu: 'Magic link',
-    subject: 'Your Dealer Review sign-in link',
+    subject: 'Your D&D Auto Management sign-in link',
     content: {
-      preheader: 'Your one-time link to sign in to Dealer Review.',
+      preheader: 'Your one-time link to sign in to D&D Auto Management.',
       eyebrow: 'Sign in',
       title: ['Your sign-in', 'link is here.'],
-      blocks: [{ kind: 'text', text: 'Use the button below to sign in to Dealer Review as {{ .Email }}. This link works once and expires shortly.' }],
+      blocks: [{ kind: 'text', text: 'Use the button below to sign in to D&D Auto Management as {{ .Email }}. This link works once and expires shortly.' }],
       cta: { label: 'Sign me in', url: LINK },
       note: 'Didn’t ask to sign in? You can ignore this email; nobody can get in without this link.',
     },
@@ -75,13 +75,13 @@ const templates: { file: string; menu: string; subject: string; content: EmailCo
   {
     file: 'change-email.html',
     menu: 'Change email address',
-    subject: 'Confirm your new Dealer Review email',
+    subject: 'Confirm your new D&D Auto Management email',
     content: {
-      preheader: 'Confirm the change to your Dealer Review sign-in email.',
+      preheader: 'Confirm the change to your D&D Auto Management sign-in email.',
       eyebrow: 'Account security',
       title: ['Confirm your', 'new email.'],
       blocks: [
-        { kind: 'text', text: 'Someone asked to change the email address you use to sign in to Dealer Review.' },
+        { kind: 'text', text: 'Someone asked to change the email address you use to sign in to D&D Auto Management.' },
         {
           kind: 'details',
           rows: [
@@ -97,13 +97,13 @@ const templates: { file: string; menu: string; subject: string; content: EmailCo
   {
     file: 'reauthentication.html',
     menu: 'Reauthentication',
-    subject: 'Your Dealer Review verification code',
+    subject: 'Your D&D Auto Management verification code',
     content: {
       preheader: 'Your one-time code to confirm it’s you.',
       eyebrow: 'Account security',
       title: ['Confirm', 'it’s you.'],
       blocks: [
-        { kind: 'text', text: 'Enter this code in Dealer Review to confirm a sensitive change to your account.' },
+        { kind: 'text', text: 'Enter this code in D&D Auto Management to confirm a sensitive change to your account.' },
         { kind: 'code', label: 'Your verification code', code: '{{ .Token }}' },
       ],
       note: 'This code expires shortly. Didn’t ask for it? Reset your password to keep your account safe.',

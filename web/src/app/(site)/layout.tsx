@@ -3,7 +3,7 @@ import { preload } from 'react-dom';
 import './site.css';
 
 export const metadata: Metadata = {
-  title: 'Dealer Review - Drive your next decision.',
+  title: 'D&D Auto Management - Drive your next decision.',
   description:
     'An invitation-only vehicle review service for dealerships. Submit vehicle details, photos and your condition rating for a human-reviewed listing recommendation and branded report.',
 };

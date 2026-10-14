@@ -12,7 +12,7 @@ export const GET = route<{ id: string }>(async (req, { id }) => {
   const review = await getReview(vehicle.id);
   if (vehicle.status !== 'completed' || !review) throw conflict('The report is available once the review is completed');
   const bytes = await buildReportPdf(vehicle, review);
-  const file = `Dealer-Review-${vehicle.year}-${vehicle.make}-${vehicle.model}-${vehicle.vin}`.replace(/[^A-Za-z0-9-]+/g, '-') + '.pdf';
+  const file = `DD-Auto-Management-${vehicle.year}-${vehicle.make}-${vehicle.model}-${vehicle.vin}`.replace(/[^A-Za-z0-9-]+/g, '-') + '.pdf';
   return new Response(new Uint8Array(bytes), {
     headers: {
       'Content-Type': 'application/pdf',

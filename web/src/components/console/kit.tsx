@@ -149,8 +149,8 @@ export function AgePill({ since }: { since: string }) {
 }
 
 export const Wordmark = () => (
-  <Link className="wordmark" href="/" aria-label="Dealer Review home">
-    <Image src={logo} alt="Dealer Review" sizes="160px" priority />
+  <Link className="wordmark" href="/" aria-label="D&D Auto Management home">
+    <Image src={logo} alt="D&D Auto Management" sizes="160px" priority />
   </Link>
 );
 
@@ -204,7 +204,7 @@ export function Unreachable({ message, onRetry }: { message: string; onRetry: ()
         <div className="login-card">
           <Wordmark />
           <div>
-            <h1>Can’t reach Dealer Review</h1>
+            <h1>Can’t reach D&D Auto Management</h1>
             <p className="muted">{message} You’re still signed in.</p>
           </div>
           <button className="btn btn-primary btn-lg" onClick={onRetry}>Try again</button>

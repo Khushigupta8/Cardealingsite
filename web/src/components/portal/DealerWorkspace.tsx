@@ -33,7 +33,7 @@ export function DealerWorkspace() {
   if (state.status === 'signedOut') {
     return (
       <LoginScreen
-        eyebrow="Dealer Review / Dealer workspace"
+        eyebrow="D&D Auto Management / Dealer workspace"
         quote={['YOUR VEHICLES.', 'YOUR REVIEWS.']}
         title="Dealer sign in"
         intro="Your vehicles. Your reviews. One place."
@@ -80,7 +80,7 @@ function Workspace({ me, onSignOut, expire }: { me: Me; onSignOut: () => void; e
   const canSubmit = !membership || membership.active;
 
   useEffect(() => {
-    document.title = `${me.dealership?.name || 'Dealer'} · Dealer Review`;
+    document.title = `${me.dealership?.name || 'Dealer'} · D&D Auto Management`;
   }, [me]);
 
   // Each load gets a ticket; a slower, older load (e.g. the previous tab) must not overwrite a newer one.

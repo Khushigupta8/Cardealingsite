@@ -7,8 +7,8 @@ export function Footer() {
     <footer className="site-footer shell">
       <div className="footer-top">
         <div>
-          <a className="brand-logo footer-logo" href="#" aria-label="Dealer Review home">
-            <Image src={logo} alt="Dealer Review" sizes="190px" />
+          <a className="brand-logo footer-logo" href="#" aria-label="D&D Auto Management home">
+            <Image src={logo} alt="D&D Auto Management" sizes="190px" />
           </a>
           <p>
             Considered vehicle reviews.
@@ -36,6 +36,7 @@ export function Footer() {
             </button>
             <a href="#enquire">Request an invitation</a>
             <a href="/terms">Membership terms</a>
+            <a href="/terms#refunds">Refund policy</a>
           </div>
           <div>
             <span className="eyebrow">Your questions</span>
@@ -46,7 +47,7 @@ export function Footer() {
         </nav>
       </div>
       <div className="footer-bottom">
-        <span>© 2026 Dealer Review</span>
+        <span>© 2026 D&D Auto Management</span>
         <span>Invite-only vehicle review service</span>
         <a className="back-top" href="#">
           Back to top <i className="ph ph-arrow-up" aria-hidden="true"></i>

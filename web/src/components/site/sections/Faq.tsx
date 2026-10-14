@@ -16,7 +16,7 @@ export function Faq() {
       <div className="faq-list">
         <details open>
           <summary>
-            Who is Dealer Review for?<i className="ph ph-plus" aria-hidden="true"></i>
+            Who is D&D Auto Management for?<i className="ph ph-plus" aria-hidden="true"></i>
           </summary>
           <div>
             <p>

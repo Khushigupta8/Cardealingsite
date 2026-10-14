@@ -23,7 +23,7 @@ export async function requireUser(req: Request, ...roles: Role[]): Promise<AuthU
   if (!token) throw unauthorized();
 
   const { data, error } = await admin().auth.getUser(token);
-  if (error?.code === 'user_banned') throw forbidden('This account has been disabled. Contact the Dealer Review team.');
+  if (error?.code === 'user_banned') throw forbidden('This account has been disabled. Contact the D&D Auto Management team.');
   if (error || !data.user) {
     console.warn(`[auth] token rejected: status=${error?.status} code=${error?.code} ${error?.message}`);
     throw unauthorized('Session expired or invalid');
@@ -33,7 +33,7 @@ export async function requireUser(req: Request, ...roles: Role[]): Promise<AuthU
     await admin().from('profiles').select('*').eq('id', data.user.id).maybeSingle(),
   );
   if (!profile) throw forbidden('No account profile. Ask for a new invitation.');
-  if (profile.disabled_at) throw forbidden('This account has been disabled. Contact the Dealer Review team.');
+  if (profile.disabled_at) throw forbidden('This account has been disabled. Contact the D&D Auto Management team.');
 
   const user: AuthUser = {
     id: data.user.id,

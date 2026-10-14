@@ -41,12 +41,12 @@ export const POST = route(async req => {
   after(() =>
     sendEmail({
       to: [e.email],
-      subject: 'We received your request for Dealer Review',
+      subject: 'We received your request for D&D Auto Management',
       preheader: 'Thanks for your interest. We’ll be in touch shortly.',
       eyebrow: 'Request received',
       title: ['Thank you.', 'Your request is in.'],
       blocks: [
-        { kind: 'text', text: `Hi ${e.name}, thanks for asking about Dealer Review for ${e.dealership}.` },
+        { kind: 'text', text: `Hi ${e.name}, thanks for asking about D&D Auto Management for ${e.dealership}.` },
         { kind: 'text', text: 'Our team reviews every request personally. If it’s a fit, your invitation will arrive at this address with a link to set up your workspace.' },
         ...(e.message ? [{ kind: 'quote' as const, from: 'Your message', text: e.message }] : []),
       ],

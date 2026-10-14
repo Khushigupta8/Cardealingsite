@@ -90,10 +90,10 @@ export async function requireActiveMembership(user: AuthUser) {
 }
 
 // ---------- Stripe catalogue ----------
-// One "Dealer Review membership" product; each dealership gets its own agreed price.
+// One "D&D Auto Management membership" product; each dealership gets its own agreed price.
 async function ensureProduct(s: Settings) {
   if (s.stripeProductId) return s.stripeProductId;
-  const product = await stripe().products.create({ name: 'Dealer Review membership', metadata: { app: 'dealer-review' } });
+  const product = await stripe().products.create({ name: 'D&D Auto Management membership', metadata: { app: 'dealer-review' } });
   await setSetting('stripeProductId', product.id);
   return product.id;
 }
@@ -116,7 +116,7 @@ export async function ensurePortalConfig() {
   const s = await getSettings();
   if (s.stripePortalConfigId) return s.stripePortalConfigId;
   const config = await stripe().billingPortal.configurations.create({
-    business_profile: { headline: 'Dealer Review membership' },
+    business_profile: { headline: 'D&D Auto Management membership' },
     default_return_url: `${env().APP_URL}/portal`,
     features: {
       invoice_history: { enabled: true },

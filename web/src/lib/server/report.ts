@@ -92,9 +92,9 @@ export async function buildReportPdf(v: VehicleRow, review: { conditionGrade: nu
   const pdf = await PDFDocument.create();
   const title = `${v.year} ${v.make} ${v.model}${v.trim ? ' ' + v.trim : ''}`;
   pdf.setTitle(`Vehicle review report - ${title}`);
-  pdf.setAuthor('Dealer Review');
+  pdf.setAuthor('D&D Auto Management');
   pdf.setSubject(`VIN ${v.vin}`);
-  pdf.setCreator('Dealer Review');
+  pdf.setCreator('D&D Auto Management');
   const regular = await pdf.embedFont(StandardFonts.Helvetica);
   const bold = await pdf.embedFont(StandardFonts.HelveticaBold);
   const photos = await loadPhotos(pdf, v.id, 4);
@@ -237,7 +237,7 @@ export async function buildReportPdf(v: VehicleRow, review: { conditionGrade: nu
   const reportId = v.id.slice(0, 8).toUpperCase();
   pages.forEach((p, i) => {
     p.drawLine({ start: { x: M, y: FOOTER - 6 }, end: { x: W - M, y: FOOTER - 6 }, thickness: 0.5, color: LINE });
-    p.drawText('Dealer Review · Human-reviewed vehicle assessment. A recommendation to support a listing decision, not an appraisal or guarantee of value.', {
+    p.drawText('D&D Auto Management · Human-reviewed vehicle assessment. A recommendation to support a listing decision, not an appraisal or guarantee of value.', {
       x: M,
       y: FOOTER - 20,
       size: 7,

@@ -39,7 +39,7 @@ export function Enquire() {
             <span>INVITATION.</span>
           </h2>
           <p className="body-copy">
-            Dealer Review works with a small number of dealerships at a time. Tell us about yours and our team will be in touch to set
+            D&D Auto Management works with a small number of dealerships at a time. Tell us about yours and our team will be in touch to set
             up your private workspace.
           </p>
           <ol className="enquire-steps">
@@ -102,7 +102,7 @@ export function Enquire() {
                 <button className="button" type="submit" disabled={state === 'busy'}>
                   {state === 'busy' ? 'Sending…' : 'Request an invitation'} <i className="ph ph-arrow-up-right" aria-hidden="true"></i>
                 </button>
-                <p>We only use these details to contact you about Dealer Review.</p>
+                <p>We only use these details to contact you about D&D Auto Management.</p>
               </div>
             </form>
           )}
