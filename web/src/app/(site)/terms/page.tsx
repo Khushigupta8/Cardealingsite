@@ -81,7 +81,7 @@ export default function TermsPage() {
             amount in full.
           </li>
           <li>
-            Approved refunds go back to the card or bank account you paid with, usually within 5–10 business days depending on your
+            Approved refunds go back to the card or bank account you paid with, usually within 5 to 10 business days depending on your
             bank.
           </li>
           <li>
