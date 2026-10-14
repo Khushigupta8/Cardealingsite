@@ -45,8 +45,8 @@ export function SiteHeader() {
 
   return (
     <header className={`site-header${scrolled ? ' scrolled' : ''}`}>
-      <a className="brand-logo" href="#" aria-label="Dealer Review home">
-        <Image src={logo} alt="Dealer Review" sizes="150px" priority />
+      <a className="brand-logo" href="#" aria-label="D&D Auto Management home">
+        <Image src={logo} alt="D&D Auto Management" sizes="150px" priority />
       </a>
       <nav id="main-nav" aria-label="Main navigation" className={open ? 'open' : undefined} onClick={e => (e.target as HTMLElement).closest('a,button') && setOpen(false)}>
         <a href="#approach">The service</a>

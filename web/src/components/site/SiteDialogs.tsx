@@ -60,7 +60,7 @@ export function SiteDialogs({ children }: { children: React.ReactNode }) {
   return (
     <DialogContext.Provider value={setState}>
       {children}
-      <dialog id="dialog" aria-label="Dealer Review" ref={ref} onClose={close} onClick={backdrop} className={state?.kind === 'report' ? 'report-dialog' : undefined}>
+      <dialog id="dialog" aria-label="D&D Auto Management" ref={ref} onClose={close} onClick={backdrop} className={state?.kind === 'report' ? 'report-dialog' : undefined}>
         <button className="close-dialog" aria-label="Close dialog" onClick={close}>
           <i className="ph ph-x" aria-hidden="true"></i>
         </button>
@@ -70,7 +70,7 @@ export function SiteDialogs({ children }: { children: React.ReactNode }) {
   );
 }
 
-const Kicker = () => <p className="eyebrow">Dealer Review / Private access</p>;
+const Kicker = () => <p className="eyebrow">D&D Auto Management / Private access</p>;
 
 function Content({ state, close }: { state: DialogState; close: () => void }) {
   switch (state.kind) {
@@ -137,7 +137,7 @@ function Content({ state, close }: { state: DialogState; close: () => void }) {
       const price = v.price ?? '$39,500';
       return (
         <>
-          <p className="eyebrow">Dealer Review / Sample valuation report</p>
+          <p className="eyebrow">D&D Auto Management / Sample valuation report</p>
           <h2>{v.name}</h2>
           <p>Prepared for Westfield Motors · October 1, 2026</p>
           <Image src={v.image} alt={v.name} sizes="(max-width: 700px) 100vw, 640px" />

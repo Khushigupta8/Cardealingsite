@@ -24,23 +24,23 @@ export async function emailAuthLink(kind: LinkKind, email: string, url: string) 
   if (kind === 'reset') {
     return sendEmail({
       to: [email],
-      subject: 'Your Dealer Review sign-in link',
-      preheader: 'Use this link to choose a new password for your Dealer Review account.',
+      subject: 'Your D&D Auto Management sign-in link',
+      preheader: 'Use this link to choose a new password for your D&D Auto Management account.',
       eyebrow: 'Account security',
       title: ['Choose a', 'new password.'],
-      blocks: [{ kind: 'text', text: 'Use the button below to set a new password for your Dealer Review account. This link works once and expires in 24 hours.' }],
+      blocks: [{ kind: 'text', text: 'Use the button below to set a new password for your D&D Auto Management account. This link works once and expires in 24 hours.' }],
       cta: { label: 'Set my password', url },
       note: 'Didn’t ask for this? You can ignore this email; your password won’t change.',
     });
   }
   return sendEmail({
     to: [email],
-    subject: 'You’re invited to Dealer Review',
+    subject: 'You’re invited to D&D Auto Management',
     preheader: 'Your dealership has been invited to a private vehicle review workspace.',
     eyebrow: 'Private invitation',
     title: ['You’re invited.', 'Your workspace awaits.'],
     blocks: [
-      { kind: 'text', text: 'Your dealership has been invited to Dealer Review: a private workspace where you submit vehicles and our team returns a considered assessment.' },
+      { kind: 'text', text: 'Your dealership has been invited to D&D Auto Management: a private workspace where you submit vehicles and our team returns a considered assessment.' },
       {
         kind: 'details',
         rows: [

@@ -3,19 +3,19 @@ import Link from 'next/link';
 import { TERMS_VERSION } from '@/lib/terms';
 
 export const metadata: Metadata = {
-  title: 'Membership terms · Dealer Review',
-  description: 'A summary of the Dealer Review membership terms for dealerships.',
+  title: 'Membership terms · D&D Auto Management',
+  description: 'A summary of the D&D Auto Management membership terms for dealerships.',
 };
 
 const updated = new Date(TERMS_VERSION).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
 
 // Plain summary of how the membership works, as described across the site.
-// The full legal agreement should be supplied by Dealer Review and placed here.
+// The full legal agreement should be supplied by D&D Auto Management and placed here.
 export default function TermsPage() {
   return (
     <main className="terms shell section-pad">
       <p className="eyebrow">
-        <Link href="/">Dealer Review</Link> / Membership terms
+        <Link href="/">D&D Auto Management</Link> / Membership terms
       </p>
       <h1>MEMBERSHIP TERMS</h1>
       <p className="terms-meta">Summary · Last updated {updated}</p>
@@ -23,7 +23,7 @@ export default function TermsPage() {
       <section>
         <h2>The service</h2>
         <p>
-          Dealer Review is an invitation-only vehicle review service for dealerships. You submit vehicle details, photos and your own
+          D&D Auto Management is an invitation-only vehicle review service for dealerships. You submit vehicle details, photos and your own
           condition rating through a private workspace, and our review team returns a recommended listing price and reviewer notes.
         </p>
         <p>
@@ -55,10 +55,41 @@ export default function TermsPage() {
       <section>
         <h2>Your vehicles and data</h2>
         <p>
-          Your submissions, photos and reports are private to your dealership and the Dealer Review team. Other dealerships cannot
+          Your submissions, photos and reports are private to your dealership and the D&D Auto Management team. Other dealerships cannot
           browse your submissions or open your vehicle records. You confirm you have the right to share the photos and details you
           submit.
         </p>
+      </section>
+
+      <section id="refunds">
+        <h2>Cancellations and refunds</h2>
+        <ul>
+          <li>
+            You can cancel at any time from the billing portal. Your membership stays active until the end of the period you have
+            paid for, and you won’t be charged again.
+          </li>
+          <li>
+            Membership fees cover access to the review service for the whole billing period. We don’t give refunds or credits for
+            partly used periods, unused reviews or periods where no vehicles were submitted.
+          </li>
+          <li>
+            Yearly memberships: if you cancel within 14 days of your first yearly payment and no reviews have been completed for
+            your dealership, we’ll refund that payment in full. After that, yearly fees are non-refundable.
+          </li>
+          <li>
+            If you were charged by mistake, such as a duplicate payment or a charge after you cancelled, we’ll refund the incorrect
+            amount in full.
+          </li>
+          <li>
+            Approved refunds go back to the card or bank account you paid with, usually within 5–10 business days depending on your
+            bank.
+          </li>
+          <li>
+            To ask about a refund or a charge, email us at{' '}
+            <a href="mailto:devon@ddautomanagement.com">devon@ddautomanagement.com</a> with your dealership name and the invoice
+            date. Please contact us before disputing a charge with your bank so we can resolve it quickly.
+          </li>
+        </ul>
       </section>
 
       <p className="terms-note">

@@ -110,7 +110,7 @@ ${content.preheader ? `<div style="display:none;max-height:0;overflow:hidden;mso
   <tr><td align="center" style="padding:28px 12px">
     <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="width:100%;max-width:600px;background:${C.card}">
       <tr><td class="px" bgcolor="#111111" style="background:#111111;padding:20px 36px;border-bottom:3px solid ${C.red}">
-        <a href="${esc(siteUrl)}" style="text-decoration:none"><img src="${LOGO_URL}" width="150" height="55" alt="DEALER REVIEW." style="display:block;border:0;font:900 16px ${DISPLAY};color:#ffffff"></a>
+        <a href="${esc(siteUrl)}" style="text-decoration:none"><img src="${LOGO_URL}" width="150" height="55" alt="D&amp;D AUTO MANAGEMENT." style="display:block;border:0;font:900 16px ${DISPLAY};color:#ffffff"></a>
       </td></tr>
       <tr><td class="px" bgcolor="${C.darkRed}" style="background:${C.darkRed};background-image:linear-gradient(135deg,${C.darkRed} 0%,#c8160f 55%,${C.red} 100%);padding:38px 36px 34px">
         <p style="margin:0 0 14px;font:700 11px/1.4 ${SANS};letter-spacing:3px;text-transform:uppercase;color:${C.pink}">${esc(content.eyebrow)}</p>
@@ -122,7 +122,7 @@ ${content.preheader ? `<div style="display:none;max-height:0;overflow:hidden;mso
         ${content.note ? `<p style="margin:22px 0 0;font:13px/1.6 ${SANS};color:${C.muted}">${esc(content.note)}</p>` : ''}
       </td></tr>
       <tr><td class="px" style="padding:22px 36px 26px;border-top:1px solid ${C.line}">
-        <p style="margin:0 0 6px;font:900 11px/1.4 ${DISPLAY};letter-spacing:2px;text-transform:uppercase;color:${C.ink}">Dealer Review<span style="color:${C.red}">.</span></p>
+        <p style="margin:0 0 6px;font:900 11px/1.4 ${DISPLAY};letter-spacing:2px;text-transform:uppercase;color:${C.ink}">D&amp;D Auto Management<span style="color:${C.red}">.</span></p>
         <p style="margin:0;font:12px/1.6 ${SANS};color:${C.muted}">Considered vehicle reviews. For the business behind the listing.<br>Invite-only vehicle review service · <a href="${esc(siteUrl)}" style="color:${C.muted};text-decoration:underline">${esc(siteUrl.replace(/^https?:\/\//, ''))}</a></p>
       </td></tr>
     </table>
@@ -144,6 +144,6 @@ export function renderText(content: EmailContent) {
   }
   if (content.cta) out.push(`${content.cta.label}: ${content.cta.url}`, '');
   if (content.note) out.push(content.note, '');
-  out.push('Dealer Review · Invite-only vehicle review service');
+  out.push('D&D Auto Management · Invite-only vehicle review service');
   return out.join('\n');
 }

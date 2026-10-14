@@ -6,7 +6,7 @@ const orbitron = Orbitron({ subsets: ['latin'], weight: ['600', '700'], variable
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
 export const metadata: Metadata = {
-  title: { default: 'Dealer Review', template: '%s · Dealer Review' },
+  title: { default: 'D&D Auto Management', template: '%s · D&D Auto Management' },
   robots: { index: false, follow: false },
   referrer: 'no-referrer',
 };

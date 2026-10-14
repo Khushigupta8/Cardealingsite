@@ -4,7 +4,7 @@ import { applySubscription, stripe } from '@/lib/server/membership';
 
 export const maxDuration = 30;
 
-// Stripe → Dealer Review: keeps each dealership's membership status current
+// Stripe → D&D Auto Management: keeps each dealership's membership status current
 // (new subscriptions, renewals, failed payments, cancellations).
 export const POST = route(async req => {
   const secret = process.env.STRIPE_WEBHOOK_SECRET;

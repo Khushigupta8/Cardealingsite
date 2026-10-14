@@ -28,7 +28,7 @@ export function AdminConsole() {
   if (state.status === 'signedOut') {
     return (
       <LoginScreen
-        eyebrow="Dealer Review / Review team"
+        eyebrow="D&D Auto Management / Review team"
         quote={['EVERY VEHICLE.', 'ONE CLEAR VIEW.']}
         title="Sign in"
         intro="For reviewers and admins. Dealers sign in from the main site."

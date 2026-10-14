@@ -1,4 +1,4 @@
-// Browser client for the Dealer Review API. Any other frontend can talk to /api/v1 the same way.
+// Browser client for the D&D Auto Management API. Any other frontend can talk to /api/v1 the same way.
 
 export type Role = 'dealer' | 'reviewer' | 'admin';
 export type Status = 'pending' | 'needs_info' | 'completed';
@@ -195,7 +195,7 @@ export const api = {
       const e = (await res.json().catch(() => null))?.error ?? {};
       throw new ApiError(res.status, e.code ?? 'error', e.message ?? 'Could not create the report.');
     }
-    const name = /filename="([^"]+)"/.exec(res.headers.get('content-disposition') ?? '')?.[1] ?? 'Dealer-Review-report.pdf';
+    const name = /filename="([^"]+)"/.exec(res.headers.get('content-disposition') ?? '')?.[1] ?? 'DD-Auto-Management-report.pdf';
     const url = URL.createObjectURL(await res.blob());
     const a = Object.assign(document.createElement('a'), { href: url, download: name });
     document.body.append(a);

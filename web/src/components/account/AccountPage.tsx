@@ -41,7 +41,7 @@ export function AccountPage({ mode }: { mode: 'activate' | 'reset' }) {
       err => {
         api.forget();
         const offline = !(err instanceof ApiError) || err.status === 0;
-        setView(offline ? { name: 'expired', title: 'Can’t reach Dealer Review', intro: 'Check your connection and open the link from your email again.' } : { name: 'expired', ...EXPIRED });
+        setView(offline ? { name: 'expired', title: 'Can’t reach D&D Auto Management', intro: 'Check your connection and open the link from your email again.' } : { name: 'expired', ...EXPIRED });
       },
     );
   }, [mode]);
@@ -49,7 +49,7 @@ export function AccountPage({ mode }: { mode: 'activate' | 'reset' }) {
   return (
     <main className="login">
       <section className="login-art" aria-hidden="true">
-        <p className="eyebrow">Dealer Review / Private access</p>
+        <p className="eyebrow">D&D Auto Management / Private access</p>
         <p className="login-quote">YOUR VEHICLES.<br /><span>YOUR REVIEWS.</span></p>
       </section>
       <section className="login-side">

@@ -1,3 +1,4 @@
+import Stripe from 'stripe';
 import { admin } from '@/lib/server/supabase';
 import { env } from '@/lib/server/env';
 import { HttpError, conflict, json, must, route } from '@/lib/server/http';
@@ -30,7 +31,7 @@ export const POST = route(async req => {
   for (const s of open.data) if (s !== reusable) await stripe().checkout.sessions.expire(s.id).catch(() => {});
   if (reusable) return json({ url: reusable.url });
 
-  const session = await stripe().checkout.sessions.create({
+  const params: Stripe.Checkout.SessionCreateParams = {
     mode: 'subscription',
     customer,
     client_reference_id: d.id,
@@ -40,6 +41,25 @@ export const POST = route(async req => {
     subscription_data: { metadata: { dealership_id: d.id } },
     success_url: `${env().APP_URL}/portal?billing=success`,
     cancel_url: `${env().APP_URL}/portal?billing=cancelled`,
-  });
+  };
+  // Required "I agree to the terms" checkbox on the Stripe page. Stripe refuses it until a
+  // Terms of Service URL is saved in Dashboard → Settings → Public details; until then
+  // checkout carries on without the checkbox instead of failing.
+  const consent: Partial<Stripe.Checkout.SessionCreateParams> = {
+    consent_collection: { terms_of_service: 'required' },
+    custom_text: {
+      terms_of_service_acceptance: {
+        message: `I agree to the [membership terms and refund policy](${env().APP_URL}/terms).`,
+      },
+    },
+  };
+  let session: Stripe.Checkout.Session;
+  try {
+    session = await stripe().checkout.sessions.create({ ...params, ...consent });
+  } catch (e) {
+    if (!(e instanceof Stripe.errors.StripeInvalidRequestError) || !/terms of service/i.test(e.message)) throw e;
+    console.warn(`[checkout] terms checkbox skipped: ${e.message}`);
+    session = await stripe().checkout.sessions.create(params);
+  }
   return json({ url: session.url });
 });

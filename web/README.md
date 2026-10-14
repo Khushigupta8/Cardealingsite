@@ -1,4 +1,4 @@
-# Dealer Review
+# D&D Auto Management
 
 Next.js 16 app on Vercel with Supabase (Postgres, Auth, Storage). One project holds the
 marketing site, the admin console, the dealer workspace and the JSON API.

@@ -33,7 +33,7 @@ export function Membership() {
         </div>
         <div className="membership-ledger">
           <div className="ledger-top">
-            <Image className="ledger-logo" src={logo} alt="Dealer Review" sizes="130px" />
+            <Image className="ledger-logo" src={logo} alt="D&D Auto Management" sizes="130px" />
             <span className="eyebrow">Membership / Included</span>
           </div>
           <div className="ledger-item">
