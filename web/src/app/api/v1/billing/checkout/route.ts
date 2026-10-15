@@ -38,6 +38,9 @@ export const POST = route(async req => {
     line_items: [{ price: priceId, quantity: 1 }],
     // Filters what Stripe offers: ACH appears where the account supports it.
     allowed_payment_method_types: ['card', 'us_bank_account'],
+    // Standard Checkout with D&D as the merchant. Newer accounts default to Managed Payments,
+    // which refuses the custom terms text below and takes an extra fee.
+    managed_payments: { enabled: false },
     subscription_data: { metadata: { dealership_id: d.id } },
     success_url: `${env().APP_URL}/portal?billing=success`,
     cancel_url: `${env().APP_URL}/portal?billing=cancelled`,
