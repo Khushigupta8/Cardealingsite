@@ -116,7 +116,11 @@ export async function ensurePortalConfig() {
   const s = await getSettings();
   if (s.stripePortalConfigId) return s.stripePortalConfigId;
   const config = await stripe().billingPortal.configurations.create({
-    business_profile: { headline: 'D&D Auto Management membership' },
+    business_profile: {
+      headline: 'D&D Auto Management membership',
+      privacy_policy_url: `${env().APP_URL}/privacy`,
+      terms_of_service_url: `${env().APP_URL}/terms`,
+    },
     default_return_url: `${env().APP_URL}/portal`,
     features: {
       invoice_history: { enabled: true },
