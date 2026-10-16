@@ -37,6 +37,7 @@ export function Footer() {
             <a href="#enquire">Request an invitation</a>
             <a href="/terms">Membership terms</a>
             <a href="/terms#refunds">Refund policy</a>
+            <a href="/privacy">Privacy policy</a>
           </div>
           <div>
             <span className="eyebrow">Your questions</span>
@@ -48,7 +49,9 @@ export function Footer() {
       </div>
       <div className="footer-bottom">
         <span>© 2026 D&D Auto Management</span>
-        <span>Invite-only vehicle review service</span>
+        <span>
+          Invite-only vehicle review service · <a href="/privacy">Privacy</a> · <a href="/terms">Terms</a>
+        </span>
         <a className="back-top" href="#">
           Back to top <i className="ph ph-arrow-up" aria-hidden="true"></i>
         </a>

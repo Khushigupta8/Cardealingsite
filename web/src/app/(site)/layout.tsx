@@ -1,11 +1,18 @@
 import type { Metadata, Viewport } from 'next';
 import { preload } from 'react-dom';
+import { SITE_NAME, SITE_URL } from '@/lib/site';
 import './site.css';
 
+// Defaults for every public page. Each page sets its own title, description, canonical and
+// social tags through pageMetadata (src/lib/site.ts).
 export const metadata: Metadata = {
-  title: 'D&D Auto Management - Drive your next decision.',
+  metadataBase: new URL(SITE_URL),
+  title: { default: `${SITE_NAME} - Drive your next decision.`, template: `%s · ${SITE_NAME}` },
   description:
     'An invitation-only vehicle review service for dealerships. Submit vehicle details, photos and your condition rating for a human-reviewed listing recommendation and branded report.',
+  applicationName: SITE_NAME,
+  openGraph: { type: 'website', siteName: SITE_NAME, locale: 'en_US' },
+  twitter: { card: 'summary_large_image' },
 };
 
 export const viewport: Viewport = { themeColor: '#151515' };

@@ -92,7 +92,7 @@ export function PortalDemo() {
               aria-label={`View ${v.name}`}
               onClick={() => (tab === 'Completed' ? open({ kind: 'report', vehicle: v }) : open({ kind: 'sample', vehicle: v, status: tab }))}
             >
-              <Image src={v.image} alt="" sizes="96px" />
+              <Image src={v.image} alt={`${v.name} ${v.trim}`} sizes="96px" />
               <div>
                 <h3>{v.name}</h3>
                 <p>{v.trim}</p>
