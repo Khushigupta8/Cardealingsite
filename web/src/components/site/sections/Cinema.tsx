@@ -19,7 +19,7 @@ export function Cinema() {
         </p>
       </div>
       <div className="cinema-screen has-video">
-        <CinemaFilm src="/videos/car-film.mp4" poster="/images/film-poster.jpg" />
+        <CinemaFilm src="/videos/car-film.mp4" poster="/images/film-poster.webp" />
         <span className="cinema-corner">01 / THE STUDIO EDIT</span>
       </div>
       <div className="cinema-footer">

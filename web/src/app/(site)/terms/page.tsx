@@ -1,11 +1,15 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { TERMS_VERSION } from '@/lib/terms';
+import { breadcrumbJsonLd, pageMetadata } from '@/lib/site';
+import { Breadcrumbs, RelatedPages } from '@/components/site/LegalNav';
 
-export const metadata: Metadata = {
-  title: 'Membership terms · D&D Auto Management',
-  description: 'A summary of the D&D Auto Management membership terms for dealerships.',
-};
+export const metadata: Metadata = pageMetadata({
+  title: 'Membership terms',
+  description:
+    'Membership terms for D&D Auto Management dealerships: the review service, your account, billing through Stripe, your data, cancellations and refunds.',
+  path: '/terms',
+});
 
 const updated = new Date(TERMS_VERSION).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
 
@@ -14,9 +18,8 @@ const updated = new Date(TERMS_VERSION).toLocaleDateString('en-US', { month: 'lo
 export default function TermsPage() {
   return (
     <main className="terms shell section-pad">
-      <p className="eyebrow">
-        <Link href="/">D&D Auto Management</Link> / Membership terms
-      </p>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd([{ name: 'Membership terms', path: '/terms' }])) }} />
+      <Breadcrumbs current="Membership terms" />
       <h1>MEMBERSHIP TERMS</h1>
       <p className="terms-meta">Summary · Last updated {updated}</p>
 
@@ -57,7 +60,7 @@ export default function TermsPage() {
         <p>
           Your submissions, photos and reports are private to your dealership and the D&D Auto Management team. Other dealerships cannot
           browse your submissions or open your vehicle records. You confirm you have the right to share the photos and details you
-          submit.
+          submit. Our <Link href="/privacy">privacy policy</Link> explains what we collect and who processes it.
         </p>
       </section>
 
@@ -95,6 +98,8 @@ export default function TermsPage() {
       <p className="terms-note">
         This page summarises the membership. Questions about these terms? Ask your reviewer from any vehicle in your workspace.
       </p>
+
+      <RelatedPages current="/terms" />
     </main>
   );
 }

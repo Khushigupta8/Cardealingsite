@@ -102,7 +102,10 @@ export function Enquire() {
                 <button className="button" type="submit" disabled={state === 'busy'}>
                   {state === 'busy' ? 'Sending…' : 'Request an invitation'} <i className="ph ph-arrow-up-right" aria-hidden="true"></i>
                 </button>
-                <p>We only use these details to contact you about D&D Auto Management.</p>
+                <p>
+                  We only use these details to contact you about D&D Auto Management. See our{' '}
+                  <a className="inline-link" href="/privacy">privacy policy</a>.
+                </p>
               </div>
             </form>
           )}
