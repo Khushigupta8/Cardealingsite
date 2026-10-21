@@ -13,7 +13,7 @@ marketing site, the admin console, the dealer workspace and the JSON API.
 
 ## Setup
 
-1. In the Supabase SQL editor, run each file in `supabase/migrations/` in order (`001` to `006`).
+1. In the Supabase SQL editor, run each file in `supabase/migrations/` in order (`001` to `007`).
 2. In **Authentication → URL Configuration**, set the Site URL to the production URL and add
    `<url>/activate` and `<url>/reset-password` (plus the `http://localhost:3000` versions) to Redirect URLs.
 3. Copy `.env.example` to `.env.local` and fill in the Supabase keys.
@@ -29,14 +29,12 @@ The first admin is created from Supabase: add a user under **Authentication → 
 
 ## Deploy
 
-Linked to the Vercel project `devon-dealer-review-video-v5-1`. Functions run in `hnd1` (Tokyo),
-next to the Supabase database (`vercel.json`). Set `SUPABASE_URL`, `SUPABASE_ANON_KEY`,
+Vercel project `dd-automanagement`, connected to this repository with Root Directory `web`:
+every push to `main` deploys to production. Functions run in `hnd1` (Tokyo), next to the
+Supabase database (`vercel.json`). Set `SUPABASE_URL`, `SUPABASE_ANON_KEY`,
 `SUPABASE_SERVICE_ROLE_KEY`, `PHOTO_BUCKET`, `STRIPE_SECRET_KEY` and `STRIPE_WEBHOOK_SECRET` in Vercel
-(plus `RESEND_API_KEY` and `EMAIL_FROM` for email); `APP_URL` defaults to the production URL.
-
-```bash
-npx vercel deploy --prod
-```
+(plus `RESEND_API_KEY`, `EMAIL_FROM` and `EMAIL_REPLY_TO` for email); `APP_URL` defaults to the
+production URL.
 
 ## Email templates
 

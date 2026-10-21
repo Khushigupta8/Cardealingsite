@@ -3,7 +3,6 @@
   "private": true,
   "scripts": {
     "dev": "npm --prefix web run dev",
-    "build": "npm --prefix web run build",
-    "deploy": "npx vercel deploy --prod"
+    "build": "npm --prefix web run build"
   }
 }
