@@ -43,3 +43,9 @@ export async function setSetting<K extends keyof Settings>(key: K, value: Settin
     .upsert({ key: KEYS[key], value, updated_at: new Date().toISOString() });
   if (error) throw new Error(`Could not save setting: ${error.message}. Has migration 004 been run?`);
 }
+
+// Values can't be null, so clearing a setting removes its row.
+export async function clearSettings(...keys: (keyof Settings)[]) {
+  const { error } = await admin().from('app_settings').delete().in('key', keys.map(k => KEYS[k]));
+  if (error) throw new Error(`Could not clear setting: ${error.message}`);
+}

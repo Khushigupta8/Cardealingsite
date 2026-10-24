@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { json, readJson, route } from '@/lib/server/http';
 import { requireUser } from '@/lib/server/auth';
-import { getSettings, setSetting } from '@/lib/server/settings';
+import { clearSettings, getSettings, setSetting } from '@/lib/server/settings';
 import { priceFor, standardPlan, stripeConfigured } from '@/lib/server/membership';
 
 const view = async () => {
@@ -28,12 +28,14 @@ export const PATCH = route(async req => {
       membershipRequired: z.boolean().optional(),
       graceDays: z.number().int().min(0).max(60).optional(),
       // Dollars. Applies to new checkouts; existing subscribers keep the price they signed up at.
-      standardPlan: z.object({ amount: z.number().positive().max(100_000), interval: z.enum(['month', 'year']) }).optional(),
+      // null removes it, so new dealerships can't pay until an admin sets their own price.
+      standardPlan: z.object({ amount: z.number().positive().max(100_000), interval: z.enum(['month', 'year']) }).nullable().optional(),
     })
     .parse(await readJson(req));
   if (body.membershipRequired !== undefined) await setSetting('membershipRequired', body.membershipRequired);
   if (body.graceDays !== undefined) await setSetting('graceDays', body.graceDays);
-  if (body.standardPlan) {
+  if (body.standardPlan === null) await clearSettings('standardPriceId', 'standardPlanCents', 'standardPlanInterval');
+  else if (body.standardPlan) {
     const cents = Math.round(body.standardPlan.amount * 100);
     const current = await getSettings();
     if (cents !== current.standardPlanCents || body.standardPlan.interval !== current.standardPlanInterval || !current.standardPriceId) {

@@ -96,7 +96,7 @@ export function MembershipPanel({ expire }: { expire: () => void }) {
     return () => clearTimeout(t);
   }, [armed]);
 
-  const saveSettings = async (patch: Partial<Omit<AdminSettings, 'standardPlan'>> & { standardPlan?: { amount: number; interval: 'month' | 'year' } }) => {
+  const saveSettings = async (patch: Partial<Omit<AdminSettings, 'standardPlan'>> & { standardPlan?: { amount: number; interval: 'month' | 'year' } | null }) => {
     try {
       setSettings(await api.patch<AdminSettings>('/admin/settings', patch));
       toast('Settings saved');
@@ -197,8 +197,8 @@ export function MembershipPanel({ expire }: { expire: () => void }) {
             <strong>Standard plan</strong>
             <p className="hint">
               {settings?.standardPlan
-                ? `Dealerships without their own price can activate at ${planText(settings.standardPlan)}. Changes apply to new sign-ups; current members keep their price.`
-                : 'Set a price every new dealership can activate with straight away. You can still give any dealership its own price below.'}
+                ? `Dealerships without their own price can activate at ${planText(settings.standardPlan)}. Changes apply to new sign-ups; current members keep their price. Remove it to price every dealership yourself.`
+                : 'None: a new dealership can’t pay until you set its price below. Optionally, set a price every new dealership can activate with straight away.'}
             </p>
           </div>
           <span className="plan-edit">
@@ -222,6 +222,11 @@ export function MembershipPanel({ expire }: { expire: () => void }) {
             <button className="btn btn-sm btn-primary" type="submit" disabled={!settings?.stripeConfigured || standardUnchanged}>
               {settings?.standardPlan ? 'Update' : 'Save'}
             </button>
+            {settings?.standardPlan && (
+              <button className="btn btn-sm" type="button" id="remove-standard-plan" onClick={() => saveSettings({ standardPlan: null })}>
+                Remove
+              </button>
+            )}
           </span>
         </form>
         {settings && (!settings.stripeConfigured || !settings.webhookConfigured) && (
